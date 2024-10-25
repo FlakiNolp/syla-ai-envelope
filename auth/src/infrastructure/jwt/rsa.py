@@ -1,7 +1,7 @@
-from dataclasses import dataclass
 from joserfc import jwt, errors
-from joserfc.jwk import RSAKey, JWKRegistry
+from joserfc.jwk import RSAKey
 from joserfc.jwt import Token
+import datetime
 
 from domain.entities.access_token import AccessToken
 from domain.entities.refresh_token import RefreshToken
@@ -14,11 +14,15 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.base import TokenType
 
 
-@dataclass
 class RSAJWT[T: PairTokens | AccessToken | RefreshToken](
     BaseJWT
 ):
-    key: RSAKey
+    def __init__(self, key: RSAKey, registry: jwt.JWTClaimsRegistry = None, access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1), refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30)):
+        self.key = key
+        self.registry = registry
+        self.access_token_expires_in = access_token_expires_in
+        self.refresh_token_expires_in = refresh_token_expires_in
+
 
     def encode(self, token: T) -> str | tuple[str, str]:
         # try:

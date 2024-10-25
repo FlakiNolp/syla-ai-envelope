@@ -1,4 +1,3 @@
-import sys
 import logging
 from functools import lru_cache
 
@@ -8,25 +7,18 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessionmaker
 
 from configs.config import ConfigSettings
-from domain.values.email import Email
-from infrastructure.email_service.base import BaseEmailService
-from infrastructure.email_service.email_service import EmailService
 from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.rsa import RSAJWT
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
-from logic.commands.projects import CreateNewProjectHandler, CreateNewProject, DeleteProjectHandler, DeleteProject
-from logic.commands.users.registration import CheckExistsEmail, CheckExistsEmailHandler, RegistrateUserCommandHandler, \
-    RegistrateUserCommand, ValidateRegistrationCommand, ValidateRegistrationCommandHandler, AuthorizeUserHandler, \
-    AuthorizeUser
-from logic.commands.projects import AddUserToProjectHandler, AddUserToProject
+from logic.commands.users import AuthenticateUserCommand, AuthenticateUserCommandHandler
 from logic.mediator.base import Mediator
 from logic.mediator.command import CommandMediator
 
 
 @lru_cache(1)
 def _init_container():
-    return _init_container()
+    return init_container()
 
 
 @lru_cache(None)
@@ -57,50 +49,18 @@ def init_container():
     container.register(logging.Logger, factory=init_logger, scope=Scope.singleton)
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
-    with open(r"logic/secrets/private_key.pem", "rb") as f:
+    # with open(r"secrets/private_key.pem", "rb") as f:
+    #     container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=container.resolve(ConfigSettings).secret_key)), scope=Scope.singleton)
+    with open(r"C:\Users\maksi\PycharmProjects\syla-ai-envelope\auth\src\logic\secrets\private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
-
-    container.register(BaseEmailService, EmailService, host='smtp.gmail.com', port=587, sender_email=Email("check.telegram.bot@gmail.com"), sender_password='jqsoucptkviktkeg', host_server = "localhost:8000")
 
     def init_mediator() -> Mediator:
         mediator = Mediator()
 
         # Users
-        # Registrations
-        container.register(CheckExistsEmailHandler)
-        container.register(RegistrateUserCommandHandler)
-        container.register(ValidateRegistrationCommandHandler)
+        container.register(AuthenticateUserCommandHandler)
 
-        mediator.register_command(
-            CheckExistsEmail, [container.resolve(CheckExistsEmailHandler)]
-        )
-        mediator.register_command(
-            RegistrateUserCommand, [container.resolve(RegistrateUserCommandHandler)]
-        )
-        mediator.register_command(
-            ValidateRegistrationCommand, [container.resolve(ValidateRegistrationCommandHandler)]
-        )
-        # Authorization
-        container.register(AuthorizeUserHandler)
-
-        mediator.register_command(
-            AuthorizeUser, [container.resolve(AuthorizeUserHandler)]
-        )
-
-        # Projects
-        container.register(CreateNewProjectHandler)
-        container.register(DeleteProjectHandler)
-        container.register(AddUserToProjectHandler)
-
-        mediator.register_command(
-            CreateNewProject, [container.resolve(CreateNewProjectHandler)]
-        )
-        mediator.register_command(
-            DeleteProject, [container.resolve(DeleteProjectHandler)]
-        )
-        mediator.register_command(
-            AddUserToProject, [container.resolve(AddUserToProjectHandler)]
-        )
+        mediator.register_command(AuthenticateUserCommand, [container.resolve(AuthenticateUserCommandHandler)])
 
         return mediator
 

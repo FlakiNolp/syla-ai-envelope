@@ -3,9 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, Iterable, Type
 
 from logic.commands.base import BaseCommand, CommandHandler
-from logic.events.base import EventHandler
 from logic.exceptions.mediator import (
-    EventHandlersNotRegisteredException,
     CommandHandlersNotRegisteredException,
 )
 from logic.mediator.command import CommandMediator

@@ -15,7 +15,6 @@ class TokenType(enum.Enum):
     refresh_token = 'refresh_token'
 
 
-@dataclass
 class BaseJWT[T: AccessToken | RefreshToken,TK: RSAKey](abc.ABC):
     key: TK
     registry: jwt.JWTClaimsRegistry = field(default_factory=jwt.JWTClaimsRegistry)

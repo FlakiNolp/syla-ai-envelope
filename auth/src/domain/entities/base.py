@@ -5,9 +5,6 @@ from typing import Any, Iterable
 
 import uuid6
 
-from domain.events.base import BaseEvent
-from domain.values.base import BaseValueObject
-
 
 @dataclass
 class BaseEntity(abc.ABC):
@@ -18,14 +15,6 @@ class BaseEntity(abc.ABC):
 
     def __eq__(self, __value: 'BaseEntity') -> bool:
         return self.id == __value.id
-
-    def register_event(self, event: BaseEvent) -> None:
-        self.__events.append(event)
-
-    def pull_events(self) -> list[BaseEvent]:
-        registered_events = copy(self.__events)
-        self.__events.clear()
-        return registered_events
 
     def model_dump(self) -> dict:
 
@@ -43,6 +32,5 @@ class BaseEntity(abc.ABC):
                 return obj
 
         return {
-            key: to_dict_recursive(value) for key, value in self.__dict__.items() if key != "_BaseEntity__events"
-                                                                                     and key != "discarded"
+            key: to_dict_recursive(value) for key, value in self.__dict__.items()
         }
