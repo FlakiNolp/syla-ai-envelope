@@ -26,9 +26,7 @@ class DenseBiEncoder(ABC):
 
 class SparseBiEncoder(ABC):
     @abstractmethod
-    def encode(
-        self, texts: str | list[str], vocab: dict[str, int]
-    ) -> list[tuple[int, float]]:
+    def encode(self, texts: str | list[str]) -> list[tuple[int, float]]:
         pass
 
     @abstractmethod
@@ -69,13 +67,12 @@ class UserBGESparse(SparseBiEncoder):
         raise NotImplementedError
 
     def encode(
-        self, texts: str | list[str], vocab: dict[str, int]
+        self, texts: str | list[str]
     ) -> list[tuple[list[int], list[np.float64]]]:
         """
         Encodes text(s) into sparse vectors using the specified vocabulary.
 
         :param texts: The input text(s) to encode.
-        :param vocab: A vocabulary dictionary mapping tokens to unique IDs.
         :returns: A list of tuples where each tuple contains:
                   - a list of token indices in the vocabulary.
                   - a list of corresponding lexical weights.t64]]]
@@ -89,7 +86,7 @@ class UserBGESparse(SparseBiEncoder):
         sparse_vectors = []
         for weighted_text in result["lexical_weights"]:
             sparse_vector = [
-                weighted_text.get(str(id), 0) for token, id in vocab.items()
+                weighted_text.get(str(id), 0) for token, id in self.sorted_vocab.items()
             ]
             ind = []
             value = []
