@@ -30,11 +30,3 @@ class BaseUnitOfWork(ABC):
     @abstractmethod
     async def flush(self, *args):
         raise NotImplementedError
-
-    @staticmethod
-    def provide_async_uow(func):
-        async def wrapper(self, *args, **kwargs):
-            async with self.uow:
-                return await func(self, *args, **kwargs)
-
-        return wrapper

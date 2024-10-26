@@ -76,12 +76,7 @@ class JWTPayload(BaseEntity):
 
         dict_payload = {
             key: to_dict_recursive(value) for key, value in self.__dict__.items()
-            if key != "_BaseEntity__events" and key != "discarded" and value is not None
+            if value is not None
         }
         dict_payload.pop("id")
         return dict_payload
-
-
-if __name__ == "__main__":
-    temp = JWTPayload(exp=datetime.timedelta(minutes=15), sub={"type": "registration"})
-    print(temp.model_dump())

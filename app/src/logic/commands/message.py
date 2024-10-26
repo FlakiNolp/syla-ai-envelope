@@ -25,7 +25,7 @@ class ReceivedMessage(BaseCommand):
 class ReceivedMessageHandler(CommandHandler[ReceivedMessage, Message]):
     uow: BaseUnitOfWork
     messages: BaseMessagesRepository
-    # rag: BaseRag
+    rag: BaseRag
 
     @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: ReceivedMessage) -> Message:
@@ -33,6 +33,8 @@ class ReceivedMessageHandler(CommandHandler[ReceivedMessage, Message]):
             raise
         message = Message(chat_id=UUID7(command.chat_id), text=command.text, author=Author.user)
         await self.messages.add_message(message, chat_id=command.chat_id)
-        message.author = Author.ai
-        return message
-
+        answer = await self.rag.generate_answer(message=message, chat_id=UUID7(command.chat_id))
+        if not answer:
+            raise
+        await self.messages.add_message(message=answer, chat_id=command.chat_id)
+        return answer
