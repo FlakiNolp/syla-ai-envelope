@@ -1,6 +1,3 @@
-from typing import Annotated
-from fastapi import Depends, Query
-from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, Field
 
 from domain.entities.chat import Chat

@@ -31,3 +31,5 @@ starlette==0.41.0
 typing_extensions==4.12.2
 uuid6==2024.7.10
 uvicorn==0.32.0
+aiohttp
+requests

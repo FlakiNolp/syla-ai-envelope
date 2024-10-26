@@ -1,8 +1,6 @@
-import asyncio
 import logging
 from functools import lru_cache
 
-from bson import UuidRepresentation
 from joserfc.rfc7518.rsa_key import RSAKey
 from punq import Container, Scope
 from sqlalchemy import URL
@@ -12,6 +10,8 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from configs.config import ConfigSettings
 from infrastructure.email_service.base import BaseEmailService
 from infrastructure.email_service.email_service import EmailService
+from infrastructure.integrations.rag.base import BaseRag
+from infrastructure.integrations.rag.envelope import Rag
 from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.rsa import RSAJWT
 from infrastructure.repositories.messages.base import BaseMessagesRepository
@@ -139,6 +139,12 @@ def init_container():
         return MongoDBMessagesRepository(mongodb_client=async_client, db_name="envelope")
 
     container.register(BaseMessagesRepository, factory=init_mongodb, scope=Scope.singleton)
+
+    def init_rag_integration():
+        config: ConfigSettings = container.resolve(ConfigSettings)
+        return Rag(host=config.rag_host, port=config.rag_port)
+
+    container.register(BaseRag, factory=init_rag_integration, scope=Scope.singleton)
 
     container.register(Mediator, factory=init_mediator)
 

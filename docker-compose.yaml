@@ -85,14 +85,20 @@ services:
       HOST_SERVER: "${HOST_SERVER}"
       MONGODB_HOST: mongodb
       MONGODB_PORT: 27017
+      RAG_HOST: rag-chat
+      RAG_PORT: 8000
     volumes:
       - ./app/src/:/src/
     networks:
       backend:
+    links:
+      - rag-chat
     depends_on:
       postgres_db:
         condition: service_healthy
       mongodb:
+        condition: service_started
+      rag-chat:
         condition: service_started
 
   rag-chat:
@@ -105,7 +111,7 @@ services:
     command: >
       sh -c "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
     networks:
-        backend:
+      backend:
 
 
 volumes:

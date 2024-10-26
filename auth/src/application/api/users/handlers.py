@@ -25,8 +25,9 @@ async def token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], cont
     try:
         pair_tokens, *_ = await mediator.handle_command(AuthenticateUserCommand(email=form_data.username, password=form_data.password))
     except ApplicationException as e:
-        raise e
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": e.message})
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": str(e)})
     return AuthenticateUserResponseSchema.from_entity(pair_tokens)
 
 

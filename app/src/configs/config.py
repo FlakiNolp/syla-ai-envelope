@@ -28,3 +28,9 @@ class ConfigSettings(BaseSettings):
     mongodb_port: int = Field(
         27017, alias="MONGODB_PORT"
     )
+    rag_host: str = Field(
+        "localhost", alias="RAG_HOST"
+    )
+    rag_port: int = Field(
+        8100, alias="RAG_PORT"
+    )

@@ -1,3 +1,4 @@
+import datetime
 from fastapi import Query
 from pydantic import BaseModel, Field
 
@@ -11,6 +12,7 @@ class JSONMessage(BaseModel):
     author: Author = Field(...)
     text: str = Field(...)
     documents: list[str] | None = Field(None)
+    timestamp: datetime.datetime
 
     @classmethod
     def from_entity(cls, message: Message) -> "JSONMessage":
@@ -31,7 +33,6 @@ class GetHistoryResponseSchema(BaseModel):
 
     @classmethod
     def from_entity(cls, messages: list[Message]) -> "GetHistoryResponseSchema":
-        print(messages)
         return cls(messages=[JSONMessage.from_entity(message) for message in messages])
 
 
