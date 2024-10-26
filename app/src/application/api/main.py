@@ -3,6 +3,7 @@ import uvicorn
 
 from application.api.users.handlers import router as users_router
 from application.api.chats.handlers import router as chats_router
+from application.api.messages.handler import router as messages_router
 
 
 def create_app():
@@ -16,6 +17,7 @@ def create_app():
     )
     app.include_router(users_router)
     app.include_router(chats_router)
+    app.include_router(messages_router)
     return app
 
 

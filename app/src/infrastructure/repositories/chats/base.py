@@ -11,3 +11,5 @@ class BaseChatRepository(abc.ABC):
     async def add(self, chat: Chat) -> None: raise NotImplementedError
     @abc.abstractmethod
     async def get_chats_by_user_id(self, user_id: UUID7) -> list[Chat]: raise NotImplementedError
+    @abc.abstractmethod
+    async def exists_by_user_id(self, user_id: UUID7, chat_id: UUID7) -> bool: raise NotImplementedError

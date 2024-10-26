@@ -9,8 +9,9 @@ from domain.entities.base import BaseEntity
 @dataclass
 class Message(BaseEntity):
     chat_id: UUID7
-    content: str
+    text: str
     author: Author
+    documents: set[str] | None = field(default=None)
     timestamp: datetime.datetime = field(default_factory=lambda: datetime.datetime.now(tz=datetime.timezone.utc))
 
     def __hash__(self):

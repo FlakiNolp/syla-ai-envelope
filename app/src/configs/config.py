@@ -19,6 +19,12 @@ class ConfigSettings(BaseSettings):
     db_database: str = Field(
         "envelope", alias="DB_DATABASE"
     )  # По умолчанию название базы данных сервера envelope
-    secret_key: str = Field(
-        alias="SECRET_KEY"
+    host_server: str = Field(
+        "localhost", alias="HOST_SERVER"
+    )
+    mongodb_host: str = Field(
+        alias="MONGODB_HOST"
+    )
+    mongodb_port: int = Field(
+        27017, alias="MONGODB_PORT"
     )

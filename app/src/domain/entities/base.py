@@ -1,3 +1,7 @@
+import uuid
+from enum import Enum
+import uuid6
+
 from domain.values.base import BaseValueObject
 from domain.values.id import UUID7, uuid7_gen
 from dataclasses import dataclass, field
@@ -15,7 +19,7 @@ class BaseEntity(abc.ABC):
     def __eq__(self, __value: 'BaseEntity') -> bool:
         return self.id == __value.id
 
-    def model_dump(self) -> dict:
+    def model_dump(self, uuid_convertation: bool = False) -> dict:
 
         def to_dict_recursive(obj: Any) -> Any:
             if isinstance(obj, BaseValueObject):
@@ -27,6 +31,10 @@ class BaseEntity(abc.ABC):
                 }
             elif isinstance(obj, Iterable) and not isinstance(obj, str):
                 return [to_dict_recursive(item) for item in obj]
+            elif isinstance(obj, Enum):
+                return obj.value
+            elif isinstance(obj, uuid.UUID | uuid6.UUID):
+                return str(obj)
             else:
                 return obj
 
