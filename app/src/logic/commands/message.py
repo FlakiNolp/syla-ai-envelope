@@ -33,5 +33,6 @@ class ReceivedMessageHandler(CommandHandler[ReceivedMessage, Message]):
             raise
         message = Message(chat_id=UUID7(command.chat_id), text=command.text, author=Author.user)
         await self.messages.add_message(message, chat_id=command.chat_id)
+        message.author = Author.ai
         return message
 
