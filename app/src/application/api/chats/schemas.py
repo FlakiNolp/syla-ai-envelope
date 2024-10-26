@@ -19,8 +19,8 @@ class CreateChatResponseSchema(BaseModel):
 
 
 class JSONChat(BaseModel):
-    chat_id: str = Field(alias="chat-id")
-    chat_name: str = Field(alias="chat-name")
+    chat_id: str = Field()
+    chat_name: str = Field()
 
     @classmethod
     def from_entity(cls, chat: Chat) -> 'JSONChat':
