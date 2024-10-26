@@ -13,7 +13,17 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.base import TokenType
 
 
-class RSAJWT[T: AccessToken | RegistrationToken](BaseJWT):
+class RSAJWT[T: AccessToken | RegistrationToken,TK: RSAKey](BaseJWT):
+    def __init__(self, key: TK, registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
+                 access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
+                 refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
+                 registration_token_expires_in: datetime.timedelta = datetime.timedelta(minutes=15)):
+        self.key = key
+        self.registry = registry
+        self.access_token_expires_in = access_token_expires_in
+        self.refresh_token_expires_in = refresh_token_expires_in
+        self.registration_token_expires_in = registration_token_expires_in
+
     def encode(self, token: T) -> str | tuple[str, str]:
             if isinstance(token, AccessToken):
                 token.payload.exp = token.payload.iat + self.access_token_expires_in
@@ -62,7 +72,6 @@ class RSAJWT[T: AccessToken | RegistrationToken](BaseJWT):
         try:
             if isinstance(token, str):
                 decoded_token = self._decode(token)
-                print(decoded_token.__dict__)
                 self.registry.validate(decoded_token.claims)
             elif isinstance(token, jwt.Token):
                 self.registry.validate(token.claims)

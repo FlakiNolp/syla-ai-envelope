@@ -60,7 +60,6 @@ class RefreshAuthenticateUserCommandHandler(
     @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: RefreshAuthenticateUserCommand) -> str:
         refresh_token: RefreshToken = self.jwt_factory.verify(token=command.refresh_token, _type=TokenType.refresh_token)
-        print(refresh_token)
         if await self.uow.users.get_by_id(UUID7(refresh_token.sub_id)):
             return self.jwt_factory.encode(
                 AccessToken(header=JWTHeader(value=Alg("RS256")),
