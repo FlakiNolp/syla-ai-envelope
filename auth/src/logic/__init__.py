@@ -13,7 +13,6 @@ from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
 from logic.commands.users import AuthenticateUserCommand, AuthenticateUserCommandHandler
 from logic.mediator.base import Mediator
-from logic.mediator.command import CommandMediator
 
 
 @lru_cache(1)
@@ -24,29 +23,6 @@ def _init_container():
 @lru_cache(None)
 def init_container():
     container = Container()
-
-    def init_logger():
-        logger = logging.getLogger(__name__)
-        logger.setLevel(logging.DEBUG)
-
-        # Обработчик для записи логов в файл
-        file_handler = logging.FileHandler(r"logic/logs/main.log")
-        file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        file_handler.setFormatter(file_formatter)
-
-        # Обработчик для вывода логов в консоль
-        console_handler = logging.StreamHandler()
-        console_formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-        console_handler.setFormatter(console_formatter)
-
-        # Добавляем обработчики в логгер
-        if not logger.hasHandlers():
-            logger.addHandler(file_handler)
-            logger.addHandler(console_handler)
-
-        return logger
-
-    container.register(logging.Logger, factory=init_logger, scope=Scope.singleton)
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
 
