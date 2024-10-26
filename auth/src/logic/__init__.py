@@ -11,7 +11,7 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.rsa import RSAJWT
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
-from logic.commands.users import AuthenticateUserCommand, AuthenticateUserCommandHandler
+from logic.commands.users import AuthenticateUserCommand, AuthenticateUserCommandHandler, RefreshAuthenticateUserCommand, RefreshAuthenticateUserCommandHandler
 from logic.mediator.base import Mediator
 
 
@@ -34,8 +34,10 @@ def init_container():
 
         # Users
         container.register(AuthenticateUserCommandHandler)
+        container.register(RefreshAuthenticateUserCommandHandler)
 
         mediator.register_command(AuthenticateUserCommand, [container.resolve(AuthenticateUserCommandHandler)])
+        mediator.register_command(RefreshAuthenticateUserCommand, [container.resolve(RefreshAuthenticateUserCommandHandler)])
 
         return mediator
 
