@@ -22,7 +22,7 @@ def create_app():
         CORSMiddleware,
         allow_origins=origins,
         allow_credentials=True,
-        allow_methods=["*"],
+        allow_methods=["POST", "GET", "PUT", "DELETE"],
         allow_headers=["*"],
     )
 
