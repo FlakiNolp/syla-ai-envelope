@@ -109,6 +109,15 @@ services:
     networks:
       backend:
 
+  rag-retriever:
+    build:
+      context: ./rag/retriever
+      dockerfile: dockerfiles/rag.retriever.Dockerfile
+    container_name: rag-retriever-envelope
+    volumes:
+      - ~/.cache/huggingface:/home/user/.cache/huggingface
+    networks:
+      backend:
 
 volumes:
   postgres-data:

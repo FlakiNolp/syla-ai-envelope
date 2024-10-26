@@ -2,6 +2,7 @@
 name = "rag"
 version = "0.1.0"
 description = ""
+name = "my-package"
 authors = ["Egorov E.A. <emelya.kara@yandex.ru>"]
 readme = "README.md"
 
