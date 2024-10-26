@@ -14,9 +14,9 @@ RUN groupadd -r user && useradd -r -g user user && \
 RUN mkdir -p /home/user/.cache/huggingface \
     && chown -R user:user /home/user/.cache/huggingface
 
-COPY --chown=user:user . /app
+COPY --chown=user:user . /app/retriever
 
-WORKDIR /app
+WORKDIR /app/retriever
 
 RUN poetry install --without dev --no-root && rm -rf $POETRY_CACHE_DIR
 
