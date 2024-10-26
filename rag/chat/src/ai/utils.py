@@ -4,6 +4,7 @@ from typing import Tuple, List, Any, Type, Dict
 from ai.core import openai_client
 from ai.prompt import qa_prompt, hyde_prompt, system_qa, sys_bruteforce, user_bruteforce
 from ai.requests import get_context
+from ai.schemas import QAResponse
 
 
 async def retrieve_context_and_pics(query: str, hypothetical_answers: list) -> tuple[Any, list[str]]:
@@ -99,12 +100,12 @@ async def is_pic_relevant(context: str, pic_base64: str) -> bool:
     return response.choices[0].message.content == "+"
 
 
-async def generate_answer(query: str, is_envelope=False) -> dict[str, str | list[str]]:
+async def generate_answer(query: str, is_envelope=False) -> QAResponse:
     if is_envelope:
         with open('text.txt', 'r', encoding='utf-8') as file:
             context = file.read()
         answer = await llm_request(query, context)
-        return {"answer": answer, "pics": []}
+        return QAResponse(answer=answer, pics=[])
     else:
         hypothetical_answers = await hypothetical_answer(query, 2)
         context, pics = await retrieve_context_and_pics(query, hypothetical_answers)
@@ -112,4 +113,4 @@ async def generate_answer(query: str, is_envelope=False) -> dict[str, str | list
 
         relevant_pics = await asyncio.gather(*[is_pic_relevant(answer, pic) for pic in pics])
         filtered_pics = [pic for pic, is_relevant in zip(pics, relevant_pics) if is_relevant]
-        return {"answer": answer, "pics": filtered_pics}
+        return QAResponse(answer=answer, pics=filtered_pics)
