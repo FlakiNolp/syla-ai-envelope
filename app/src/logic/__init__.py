@@ -14,11 +14,12 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.rsa import RSAJWT
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
+from logic.commands.chats import CreateChatHandler, CreateChat
 from logic.commands.users import AuthorizeUser, AuthorizeUserHandler, CheckExistsEmailHandler, \
     RegistrateUserCommandHandler, ValidateRegistrationCommandHandler, CheckExistsEmail, RegistrateUserCommand, \
     ValidateRegistrationCommand
 from logic.mediator.base import Mediator
-from logic.mediator.command import CommandMediator
+from logic.queries.chats import GetChatsHandler, GetChats
 
 
 @lru_cache(1)
@@ -55,7 +56,7 @@ def _init_container():
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
 
-    with open(r"C:\Users\maksi\PycharmProjects\syla-ai-envelope\auth\src\logic\secrets\private_key.pem", "rb") as f:
+    with open("logic/secrets/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
     container.register(BaseEmailService, EmailService, host='smtp.gmail.com', port=587, sender_email='check.telegram.bot@gmail.com', sender_password='jqsoucptkviktkeg', host_server = "localhost:8000")
@@ -84,6 +85,13 @@ def _init_container():
         mediator.register_command(
             AuthorizeUser, [container.resolve(AuthorizeUserHandler)]
         )
+
+        # Chats
+        container.register(CreateChatHandler)
+        container.register(GetChatsHandler)
+
+        mediator.register_command(CreateChat, [container.resolve(CreateChatHandler)])
+        mediator.register_query(GetChats, container.resolve(GetChatsHandler))
 
         return mediator
 

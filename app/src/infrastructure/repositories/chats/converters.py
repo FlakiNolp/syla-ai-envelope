@@ -3,7 +3,7 @@ from domain.values.chat_name import ChatName
 from infrastructure.repositories.models import Chat
 
 
-class UserConverter:
+class ChatConverter:
     @classmethod
     def convert_from_sqlalchemy_to_entity(cls, model: Chat) -> DomainChat:
         return DomainChat(

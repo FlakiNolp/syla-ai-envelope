@@ -6,12 +6,11 @@ from logic.commands.base import BaseCommand, CommandHandler
 from logic.exceptions.mediator import (
     CommandHandlersNotRegisteredException,
 )
-from logic.mediator.command import CommandMediator
 from logic.queries.base import BaseQuery, BaseQueryHandler
 
 
 @dataclass(frozen=True, eq=False)
-class Mediator[CT: BaseCommand, CR: Any, QT: BaseQuery, QR: Any](CommandMediator):
+class Mediator[CT: BaseCommand, CR: Any, QT: BaseQuery, QR: Any]:
     commands_map: dict[CT, list[CommandHandler]] = field(
         default_factory=lambda: defaultdict(list), kw_only=True
     )
@@ -24,8 +23,8 @@ class Mediator[CT: BaseCommand, CR: Any, QT: BaseQuery, QR: Any](CommandMediator
     ):
         self.commands_map[command].extend(command_handlers)
 
-    def register_query(self, query: Type[QT], query_handlers: Iterable[BaseQueryHandler[QT, QR]]):
-        self.queries_map[query].extend(query_handlers)
+    def register_query(self, query: Type[QT], query_handler: BaseQueryHandler[QT, QR]):
+        self.queries_map[query] = query_handler
 
     async def handle_command(self, command: BaseCommand) -> Iterable[CR]:
         command_type = command.__class__
@@ -34,7 +33,7 @@ class Mediator[CT: BaseCommand, CR: Any, QT: BaseQuery, QR: Any](CommandMediator
             raise CommandHandlersNotRegisteredException(command_type)
         return [await handler.handle(command=command) for handler in handlers]
 
-    async def handle_query(self, query: Type[QT]) -> QR:
+    async def handle_query(self, query: BaseQuery) -> QR:
         return await self.queries_map[query.__class__].handle(query=query)
 
 

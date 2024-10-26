@@ -8,7 +8,7 @@ from domain.values.chat_name import ChatName
 
 @dataclass
 class Chat(BaseEntity):
-    user_id: UUID7
+    user_id: UUID7 | str
     name: ChatName
     messages: set[Message] = field(default_factory=set)
 
