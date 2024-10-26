@@ -5,20 +5,11 @@ def safe_text_slice(
     Safely slices a piece of text or a list of tokens without cutting words or tokens in half.
 
     :param text: The input text to slice. Can be either a string (in ``mode='words'``) or a list of tokens (in ``mode='tokens'``).
-    :type text: Union[str, List[str]]
     :param start: The starting index for the slice.
-    :type start: int
     :param length: The maximum length of the slice.
-    :type length: int
     :param mode: The mode of operation. Use ``'words'`` for slicing a string or ``'tokens'`` for slicing a list of tokens.
-    :type mode: str, optional
     :returns: A tuple containing the sliced text or token list, start index, and end index.
-    :rtype: tuple[Union[str, List[str]], int, int]
     :raises ValueError: If the mode is invalid or the type of ``text`` does not match the selected ``mode``.
-
-    Example:
-        >>> safe_text_slice("This is a sample text for testing.", 5, 10, mode='words')
-        ('is a sample', 5, 15)
     """
     if mode == "words" and isinstance(text, str):
         # Строковый режим для обрезки слов

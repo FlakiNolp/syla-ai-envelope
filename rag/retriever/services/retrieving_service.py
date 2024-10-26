@@ -9,7 +9,18 @@ from retriever.schemas import RetrieveResult, TextRetrieveResult, ImageRetrieveR
 
 
 class RetrievingService:
+    """
+    A service for managing and retrieving information from dense, sparse, and image collections
+    in Qdrant, with support for re-ranking results based on relevance to a given query.
+    """
+
     def __init__(self):
+        """
+        Initializes the RetrievingService with collection names, encoders, and a reranker.
+
+        Checks if the required collections are present in Qdrant. If not, it deletes any existing collections
+        and creates new ones with the necessary configurations for dense, sparse, and image storage.
+        """
         self.client = QdrantClient(host=settings.qdrant.host, port=settings.qdrant.port)
         self.sparse_collection_name = "docs_sparse_collection"
         self.dense_collection_name = "docs_dense_collection"
@@ -21,6 +32,12 @@ class RetrievingService:
         self.check_collections()
 
     def check_collections(self) -> None:
+        """
+        Verifies the existence of sparse, dense, and image collections in Qdrant.
+
+        Logs the current collections. If any required collections are missing, it deletes
+        all existing collections and calls `_create_and_fill_collections` to create and populate them.
+        """
         collections = self.client.get_collections()
         LOGGER.info(f"Collections: {collections}")
         if (
@@ -38,6 +55,14 @@ class RetrievingService:
             return
 
     def _create_and_fill_collections(self):
+        """
+        Creates and populates the dense, sparse, and image collections with text and image data.
+
+        - Creates the dense collection for text embeddings.
+        - Processes and uploads text data for dense embedding storage.
+        - Creates the sparse collection for sparse vector storage and uploads sparse vector data.
+        - Creates the image collection, generates embeddings for images with captions, and uploads them.
+        """
         # Create dense collection
         self.client.create_collection(
             collection_name=self.dense_collection_name,
@@ -131,6 +156,18 @@ class RetrievingService:
     def get_nearest_points(
         self, query: str, top_k: int, top_img_k: int
     ) -> RetrieveResult:
+        """
+        Retrieves and ranks the nearest text and image results to a given query.
+
+        This method first encodes the query using dense and sparse encoders, retrieves matching text passages
+        and images, reranks the results, and returns the top results for each.
+
+        :param query: The query string for which nearest points are to be found.
+        :param top_k: The number of top-ranked text results to return.
+        :param top_img_k: The number of top-ranked image results to return.
+
+        :returns: A `RetrieveResult` object containing ranked text and image results.
+        """
         dense_query = self.user_bg_dense.encode(query, mode="avg-pooling")
         sparse_query = self.user_bg_sparse.encode_text_with_sparse_vectors(query)
 
