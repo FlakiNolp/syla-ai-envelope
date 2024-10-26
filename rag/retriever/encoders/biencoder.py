@@ -10,7 +10,7 @@ from transformers import AutoModel, AutoTokenizer
 
 class DenseBiEncoder(ABC):
     @abstractmethod
-    def encode(self, query: str) -> tuple[str, str]:
+    def encode(self, query: str, mode: str) -> tuple[str, str]:
         pass
 
     @abstractmethod
@@ -54,7 +54,9 @@ class UserBGESparse(SparseBiEncoder):
         self.model = BGEM3FlagModel(
             settings.sparse_retriever.name, use_fp16=True, normalize_embeddings=True
         )
-        self.model.model.sparse_linear.load_state_dict(torch.load("./sparse_linear.pt"))
+        self.model.model.sparse_linear.load_state_dict(
+            torch.load(settings.base_dir_path / "encoders" / "sparse_linear.pt")
+        )
         self.model.model.eval()
 
         vocab = self.model.model.tokenizer.get_vocab()
@@ -105,7 +107,7 @@ class UserBGESparse(SparseBiEncoder):
         child_chunk_size: int = 512,
         parent_overlap: int = 250,
         child_overlap: int = 100,
-    ) -> dict[str | list[str], list[tuple[list[int], list[np.float64]]]]:
+    ) -> dict[str | list[str], list[tuple[list[int], list[float]]]]:
         """
         Encodes text(s) by dividing them into hierarchical chunks with specified overlap.
 
@@ -222,16 +224,27 @@ class UserBGEDense(DenseBiEncoder):
             texts_embeddings.append(late_chunks)
         return texts_embeddings
 
-    def encode(self, query: str) -> np.ndarray[float]:
-        """
+    def encode(self, query: str, mode: str) -> np.ndarray[float]:
+        """0
         Encodes a single query string into a dense vector representation.
 
+        :param mode: The mode of encoding. Can be 'avg-pooling' or 'cls-pooling'.
         :param query: The query string to be encoded.
         :returns: The dense embedding of the query.
         """
-        tokenized_query = self.tokenizer.tokenize(query, add_special_tokens=False)
-        query_embedding = nn.functional.tanh(
-            self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
-        )
-        query_embedding = query_embedding.squeeze().detach().numpy()
+        tokenized_query = self.tokenizer(query, padding=True, truncation=True)
+        if mode == "avg-pooling":
+            query_embedding = nn.functional.tanh(
+                self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
+            )
+            query_embedding = query_embedding.squeeze().detach().numpy()
+        elif mode == "cls-pooling":
+            query_embedding = (
+                self.model(**tokenized_query)["pooler_output"]
+                .squeeze()
+                .detach()
+                .numpy()
+            )
+        else:
+            raise NotImplementedError
         return query_embedding

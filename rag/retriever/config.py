@@ -1,10 +1,14 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
+from pathlib import Path
 
 
 class QdrantConfig(BaseSettings):
-    host: str = Field(alias="QDRANT_HOST")
-    port: str = Field(alias="QDRANT_PORT")
+    host: str = Field(alias="QDRANT_HOST", default="31.129.50.189")
+    port: str = Field(
+        alias="QDRANT_PORT",
+        default="6333",
+    )
 
 
 class DenseRetrieverConfig(BaseSettings):
@@ -24,6 +28,7 @@ class Config(BaseSettings):
     dense_retriever: DenseRetrieverConfig = DenseRetrieverConfig()
     sparse_retriever: SparseRetrieverConfig = SparseRetrieverConfig()
     reranker: RerankerConfig = RerankerConfig()
+    base_dir_path: Path = Path(__file__).parent
 
 
 settings = Config()
