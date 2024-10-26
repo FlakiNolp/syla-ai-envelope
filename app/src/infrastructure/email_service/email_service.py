@@ -1,5 +1,3 @@
-import asyncio
-from dataclasses import dataclass
 from typing import Any
 import aiosmtplib
 from email.message import EmailMessage
@@ -30,8 +28,8 @@ class EmailService(BaseEmailService):
                 await self.server.ehlo()
                 await self.server.send_message(message)
         except Exception as e:
-            raise SendEmailException(receiver_email)
+            raise SendEmailException(receiver_email.as_generic_type())
 
     async def send_registration_mail(self, receiver_email: Email, registration_token: str):
-        await self.send(receiver_email, 'Регистрация в DataChad', f"Ссылка для регистрации\nhttp://{self.host_server}/registration?token={registration_token}")
+        await self.send(receiver_email, 'Регистрация', f"Ссылка для регистрации\nhttp://{self.host_server}/registration?token={registration_token}")
 

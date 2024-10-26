@@ -22,3 +22,6 @@ class ConfigSettings(BaseSettings):
     secret_key: str = Field(
         alias="SECRET_KEY"
     )
+    host_server: str = Field(
+        "localhost", alias="HOST_SERVER"
+    )

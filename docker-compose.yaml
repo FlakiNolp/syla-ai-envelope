@@ -62,7 +62,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: envelope
-    volumes:
+      HOST_SERVER: "${HOST_SERVER}"
       - ./app/src/:/src/
     networks:
       backend:

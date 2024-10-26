@@ -7,7 +7,6 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, async_sessionmaker
 
 from configs.config import ConfigSettings
-from domain.values.email import Email
 from infrastructure.email_service.base import BaseEmailService
 from infrastructure.email_service.email_service import EmailService
 from infrastructure.jwt.base import BaseJWT
@@ -24,11 +23,11 @@ from logic.queries.chats import GetChatsHandler, GetChats
 
 @lru_cache(1)
 def _init_container():
-    return _init_container()
+    return init_container()
 
 
 @lru_cache(None)
-def _init_container():
+def init_container():
     container = Container()
 
     def init_logger():
@@ -59,7 +58,7 @@ def _init_container():
     with open("logic/secrets/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
-    container.register(BaseEmailService, EmailService, host='smtp.gmail.com', port=587, sender_email='check.telegram.bot@gmail.com', sender_password='jqsoucptkviktkeg', host_server = "localhost:8000")
+    container.register(BaseEmailService, EmailService, host='smtp.gmail.com', port=587, sender_email='check.telegram.bot@gmail.com', sender_password='jqsoucptkviktkeg', host_server=container.resolve(ConfigSettings).host_server)
 
     def init_mediator() -> Mediator:
         mediator = Mediator()
