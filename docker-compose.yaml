@@ -95,6 +95,19 @@ services:
       mongodb:
         condition: service_started
 
+  rag-chat:
+    build: ./rag/chat
+    container_name: rag-chat-envelope
+    ports:
+      - "8100:8000"
+    volumes:
+      - ./rag/chat:/usr/src/chat
+    command: >
+      sh -c "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+    networks:
+        backend:
+
+
 volumes:
   postgres-data:
   mongodb-data:
