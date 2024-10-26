@@ -2,6 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 
 from application.api.users.handlers import router as users_router
+from application.api.chats.handlers import router as chats_router
 
 
 def create_app():
@@ -14,6 +15,7 @@ def create_app():
         debug=True,
     )
     app.include_router(users_router)
+    app.include_router(chats_router)
     return app
 
 

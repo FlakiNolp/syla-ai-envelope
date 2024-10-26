@@ -1,14 +1,8 @@
-from enum import EnumMeta
+from enum import Enum
 
-from auth.src.domain.values.base import BaseValueObject
+from domain.values.base import BaseValueObject
 
 
-class Author(BaseValueObject, metaclass=EnumMeta):
-    def validate(self):
-        pass
-
-    def as_generic_type(self) -> str:
-        pass
-
+class Author(Enum):
     user = "user"
     chatbot = "chatbot"

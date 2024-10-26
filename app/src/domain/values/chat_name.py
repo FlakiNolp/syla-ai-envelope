@@ -12,4 +12,4 @@ class ChatName(BaseValueObject):
             raise
 
     def as_generic_type(self) -> str:
-        pass
+        return self.value
