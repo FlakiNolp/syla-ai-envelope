@@ -26,6 +26,7 @@ from logic.commands.users import AuthorizeUser, AuthorizeUserHandler, CheckExist
     ValidateRegistrationCommand
 from logic.mediator.base import Mediator
 from logic.queries.chats import GetChatsHandler, GetChats
+from logic.queries.message import GetHistoryMessages, GetHistoryMessagesHandler
 
 
 @lru_cache(1)
@@ -101,8 +102,10 @@ def init_container():
 
         # Messages
         container.register(ReceivedMessageHandler)
+        container.register(GetHistoryMessagesHandler)
 
         mediator.register_command(ReceivedMessage, [container.resolve(ReceivedMessageHandler)])
+        mediator.register_query(GetHistoryMessages, container.resolve(GetHistoryMessagesHandler))
 
         return mediator
 

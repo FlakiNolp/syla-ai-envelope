@@ -19,7 +19,7 @@ class BaseEntity(abc.ABC):
     def __eq__(self, __value: 'BaseEntity') -> bool:
         return self.id == __value.id
 
-    def model_dump(self, uuid_convertation: bool = False) -> dict:
+    def model_dump(self, uuid_conversation: bool = False) -> dict:
 
         def to_dict_recursive(obj: Any) -> Any:
             if isinstance(obj, BaseValueObject):
@@ -33,7 +33,7 @@ class BaseEntity(abc.ABC):
                 return [to_dict_recursive(item) for item in obj]
             elif isinstance(obj, Enum):
                 return obj.value
-            elif isinstance(obj, uuid.UUID | uuid6.UUID):
+            elif uuid_conversation and isinstance(obj, uuid.UUID | uuid6.UUID):
                 return str(obj)
             else:
                 return obj
