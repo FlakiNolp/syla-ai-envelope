@@ -1,5 +1,4 @@
 from domain.entities.chat import Chat
-from domain.values.email import Email
 from sqlalchemy import select, func
 
 from domain.values.id import UUID7
@@ -20,3 +19,6 @@ class SQLAlchemyChatRepository(BaseChatRepository, BaseSQLAlchemyRepository):
         chats = (await self._async_transaction.scalars(select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id))).unique().all()
         chats = [ChatConverter.convert_from_sqlalchemy_to_entity(chat) for chat in chats]
         return chats
+
+    async def exists_by_user_id(self, user_id: UUID7, chat_id: UUID7) -> bool:
+        return True if (await self._async_transaction.scalars(select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id, SQLAlchemyChat.id == chat_id))).one_or_none() is not None else False

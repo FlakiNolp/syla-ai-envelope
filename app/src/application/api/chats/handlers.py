@@ -20,7 +20,7 @@ router = APIRouter(tags=["Chats"])
                 status.HTTP_201_CREATED: {"model": CreateChatResponseSchema},
                 status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
             })
-async def create_chat(data: CreateChatRequestSchema,  access_token: AccessToken = Depends(auth_user), container: Container = Depends(_init_container)):
+async def create_chat(data: CreateChatRequestSchema, access_token: AccessToken = Depends(auth_user), container: Container = Depends(_init_container)):
     try:
         mediator: Mediator = container.resolve(Mediator)
         chat: Chat = (await mediator.handle_command(CreateChat(access_token.sub_id, data.chat_name)))[0]

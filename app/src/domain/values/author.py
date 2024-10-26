@@ -5,4 +5,4 @@ from domain.values.base import BaseValueObject
 
 class Author(Enum):
     user = "user"
-    chatbot = "chatbot"
+    ai = "ai"

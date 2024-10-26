@@ -25,6 +25,25 @@ services:
     networks:
       backend:
 
+  mongodb:
+    container_name: mongodb-envelope
+    image: mongo:latest
+    restart: always
+    #environment:
+    #  MONGO_INITDB_ROOT_USERNAME: root
+    #  MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      backend:
+
   auth-app:
     build:
       context: .
@@ -44,7 +63,8 @@ services:
     networks:
       backend:
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
 
   main-app:
     build:
@@ -63,15 +83,21 @@ services:
       DB_PASSWORD: postgres
       DB_DATABASE: envelope
       HOST_SERVER: "${HOST_SERVER}"
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
     volumes:
       - ./app/src/:/src/
     networks:
       backend:
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
 
 volumes:
   postgres-data:
+  mongodb-data:
 
 networks:
   backend:

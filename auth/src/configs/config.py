@@ -19,6 +19,3 @@ class ConfigSettings(BaseSettings):
     db_database: str = Field(
         "envelope", alias="DB_DATABASE"
     )  # По умолчанию название базы данных сервера envelope
-    secret_key: str = Field(
-        alias="SECRET_KEY"
-    )

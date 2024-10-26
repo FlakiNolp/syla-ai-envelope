@@ -1,6 +1,8 @@
 import abc
 
+from domain.entities.message import Message
+
 
 class BaseMessagesRepository(abc.ABC):
     @abc.abstractmethod
-    def add_message(self): ...
+    async def add_message(self, message: Message, chat_id: str): raise NotImplementedError
