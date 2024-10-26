@@ -49,9 +49,8 @@ def init_container():
     container.register(logging.Logger, factory=init_logger, scope=Scope.singleton)
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
-    # with open(r"secrets/private_key.pem", "rb") as f:
-    #     container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=container.resolve(ConfigSettings).secret_key)), scope=Scope.singleton)
-    with open(r"C:\Users\maksi\PycharmProjects\syla-ai-envelope\auth\src\logic\secrets\private_key.pem", "rb") as f:
+
+    with open("logic/secrets/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
     def init_mediator() -> Mediator:

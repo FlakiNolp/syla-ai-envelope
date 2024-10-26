@@ -7,6 +7,16 @@ from domain.exceptions.password import PasswordValidationException
 
 
 @dataclass(frozen=True)
+class HashedPassword(BaseValueObject):
+    value: str
+
+    def validate(self): ...
+
+    def as_generic_type(self) -> str:
+        return self.value
+
+
+@dataclass(frozen=True)
 class Password(BaseValueObject):
     value: str
 
@@ -25,12 +35,6 @@ class Password(BaseValueObject):
     def as_generic_type(self) -> str:
         return hashlib.sha256(self.value.encode("utf8")).hexdigest()
 
+    def hash_password(self) -> HashedPassword:
+        return HashedPassword(hashlib.sha256(self.value.encode("utf8")).hexdigest())
 
-@dataclass(frozen=True)
-class HashedPassword(BaseValueObject):
-    value: str
-
-    def validate(self): ...
-
-    def as_generic_type(self) -> str:
-        return self.value

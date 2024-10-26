@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 
+from infrastructure.repositories.chats.sqlalchemy import SQLAlchemyChatRepository
 from infrastructure.repositories.users.sqlalchemy import SQLAlchemyUserRepository
 
 from infrastructure.unit_of_work.base import BaseUnitOfWork
@@ -29,6 +30,7 @@ class SQLAlchemyUnitOfWork(BaseUnitOfWork):
     async def __aenter__(self, async_transaction: AsyncSession = None):
         self._async_transaction = async_transaction
         self.users = SQLAlchemyUserRepository(self._async_transaction)
+        self.chats = SQLAlchemyChatRepository(self._async_transaction)
 
     async def __aexit__(self, *args):
         await self.rollback()

@@ -13,6 +13,10 @@ class User(BaseEntity):
     password: Password | HashedPassword
     chats: set[Chat] = field(default_factory=set)
 
+    @classmethod
+    def create_user(cls, email: Email, password: HashedPassword):
+        return cls(email=email, password=password)
+
     def create_chat(self, chat_name: ChatName) -> Chat:
         chat = Chat(user_id=self.id, name=chat_name)
         self.chats.add(chat)

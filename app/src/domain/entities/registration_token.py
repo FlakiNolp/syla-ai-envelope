@@ -1,13 +1,14 @@
 from dataclasses import dataclass
+import datetime
 
 from domain.entities.base import BaseEntity
+from domain.entities.jwt_payload import JWTPayload
 from domain.values.alg import Alg
 from domain.values.jwt_header import JWTHeader
-from domain.entities.jwt_payload import JWTPayload
 
 
 @dataclass
-class AccessToken(BaseEntity):
+class RegistrationToken(BaseEntity):
     header: JWTHeader
     payload: JWTPayload
 
@@ -17,8 +18,3 @@ class AccessToken(BaseEntity):
     @property
     def sub(self):
         return self.payload.sub
-
-
-if __name__ == "__main__":
-    access_token = AccessToken(JWTHeader(Alg("RS256")), JWTPayload(sub={"type": "registration"}))
-    print(access_token.sub)

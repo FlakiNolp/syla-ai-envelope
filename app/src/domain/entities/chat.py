@@ -1,14 +1,16 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-import uuid6
+from domain.entities.message import Message
+from domain.values.id import UUID7
 from domain.entities.base import BaseEntity
 from domain.values.chat_name import ChatName
 
 
 @dataclass
 class Chat(BaseEntity):
-    user_id: uuid6.UUID
+    user_id: UUID7
     name: ChatName
+    messages: set[Message] = field(default_factory=set)
 
     def __hash__(self):
         return hash(self.id)

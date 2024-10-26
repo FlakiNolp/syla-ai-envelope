@@ -1,11 +1,11 @@
 import datetime
 from dataclasses import dataclass, field
 from typing import TypedDict, override, Any, Iterable, Literal
-import uuid6
 
 from domain.exceptions.jwt import JWTPayloadException
 from domain.entities.base import BaseEntity
 from domain.values.base import BaseValueObject
+from domain.values.id import uuid7_gen
 
 
 class Sub(TypedDict, total=False):
@@ -18,7 +18,7 @@ class Sub(TypedDict, total=False):
 
 @dataclass
 class JWTPayload(BaseEntity):
-    jti: str = field(default_factory=lambda: str(uuid6.uuid8()))
+    jti: str = field(default_factory=lambda: str(uuid7_gen()))
     iss: str | None = field(default=None)
     sub: Sub = field(default=None)
     iat: datetime.datetime = field(

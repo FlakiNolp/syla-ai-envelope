@@ -32,7 +32,6 @@ class AuthenticateUserCommandHandler(
     @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: AuthenticateUserCommand) -> PairTokens:
         user = await self.uow.users.get_by_email(Email(command.email))
-        print(user.password.as_generic_type(), hashlib.sha256(command.password.encode()).hexdigest())
         if user is None or user.password.as_generic_type() != hashlib.sha256(command.password.encode()).hexdigest():
             raise UserAuthenticateException()
         access_token = self.jwt_factory.encode(

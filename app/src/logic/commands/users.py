@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
 from domain.entities.access_token import AccessToken
 from domain.entities.jwt_payload import JWTPayload
 from domain.entities.registration_token import RegistrationToken
@@ -36,11 +37,11 @@ class CheckExistsEmail(BaseCommand):
 class CheckExistsEmailHandler(CommandHandler[CheckExistsEmail, bool]):
     uow: BaseUnitOfWork
 
+    @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: CheckExistsEmail) -> bool:
-        async with self.uow:
-            if await self.uow.users.get(EqualsSpecification("email", Email(command.email))) is None:
-                return False
-            return True
+        if await self.uow.users.get_by_email(Email(command.email)) is None:
+            return False
+        return True
 
 
 @dataclass(frozen=True)
@@ -72,11 +73,12 @@ class ValidateRegistrationCommandHandler(CommandHandler[ValidateRegistrationComm
     jwt_service: BaseJWT
     uow: BaseUnitOfWork
 
+    @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: ValidateRegistrationCommand) -> User:
         registration_token: RegistrationToken = self.jwt_service.verify(token=command.token,
                                                                         _type=TokenType.registration_token)
         new_user = User.create_user(Email(registration_token.payload.sub['email']),
                                     HashedPassword(registration_token.payload.sub['hashed_password']))
-        async with self.uow:
-            await self.uow.users.add(new_user)
+        await self.uow.users.add(new_user)
+        await self.uow.commit()
         return new_user

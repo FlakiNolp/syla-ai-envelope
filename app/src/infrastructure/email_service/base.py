@@ -8,8 +8,6 @@ from domain.values.email import Email
 
 @dataclass
 class BaseEmailService(abc.ABC):
-    log: logging.Logger
-
     @abc.abstractmethod
     async def send(self, receiver_email: Email, subject: str, body: Any): ...
     @abc.abstractmethod
