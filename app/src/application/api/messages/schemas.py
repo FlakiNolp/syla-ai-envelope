@@ -1,10 +1,6 @@
-from typing import Annotated
-
-from fastapi import Depends, Query
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import Query
 from pydantic import BaseModel, Field
 
-from domain.entities.chat import Chat
 from domain.entities.message import Message
 from domain.values.author import Author
 
@@ -12,23 +8,30 @@ from domain.values.author import Author
 class JSONMessage(BaseModel):
     id: str = Field(...)
     chat_id: str = Field(...)
-    author: Author = Field(..., alias="author")
-    text: str = Field(..., alias="text")
-    documents: list[str] | None = Field(None, alias="documents")
+    author: Author = Field(...)
+    text: str = Field(...)
+    documents: list[str] | None = Field(None)
 
     @classmethod
     def from_entity(cls, message: Message) -> "JSONMessage":
-        return cls(**message.model_dump())
+        return cls(**message.model_dump(uuid_conversation=True))
 
 
 class ReceivedMessageRequestSchema(BaseModel):
     message: str
-    chat_id: str = Field(..., alias="chat-id")
+    chat_id: str = Field(...)
 
 
-class ReceivedMessageResponseSchema(BaseModel):
-    message: JSONMessage
+class GetHistoryRequestSchema(BaseModel):
+    chat_id: str = Query(...)
+
+
+class GetHistoryResponseSchema(BaseModel):
+    messages: list[JSONMessage]
 
     @classmethod
-    def from_entity(cls, message: Message) -> 'ReceivedMessageResponseSchema':
-        return cls(message=JSONMessage(message_id=str(message.id), chat_id=str(message.chat_id), author=message.author, text=message.text, documents=message.documents))
+    def from_entity(cls, messages: list[Message]) -> "GetHistoryResponseSchema":
+        print(messages)
+        return cls(messages=[JSONMessage.from_entity(message) for message in messages])
+
+

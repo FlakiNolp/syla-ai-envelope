@@ -20,7 +20,7 @@ def create_app():
     app.include_router(chats_router)
     app.include_router(messages_router)
 
-    origins = ["*"]
+    origins = ["http://localhost"]
 
     app.add_middleware(
         CORSMiddleware,
