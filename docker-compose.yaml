@@ -102,8 +102,6 @@ services:
   rag-chat:
     build: ./rag/chat
     container_name: rag-chat-envelope
-    ports:
-      - "8100:8000"
     volumes:
       - ./rag/chat:/usr/src/chat
     command: >
