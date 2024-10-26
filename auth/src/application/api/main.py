@@ -24,6 +24,7 @@ def create_app():
         allow_credentials=True,
         allow_methods=["POST", "GET", "PUT", "DELETE"],
         allow_headers=["*"],
+        expose_headers=["*"],
     )
 
     return app
