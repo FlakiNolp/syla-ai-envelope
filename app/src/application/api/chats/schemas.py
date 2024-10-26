@@ -11,7 +11,7 @@ class CreateChatRequestSchema(BaseModel):
 
 
 class CreateChatResponseSchema(BaseModel):
-    chat_id: str = Field(alias="chat-id")
+    chat_id: str = Field()
 
     @classmethod
     def from_entity(cls, chat: Chat) -> 'CreateChatResponseSchema':
