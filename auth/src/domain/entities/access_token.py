@@ -17,3 +17,7 @@ class AccessToken(BaseEntity):
     @property
     def sub(self):
         return self.payload.sub
+
+    @property
+    def sub_id(self):
+        return self.sub["id"]

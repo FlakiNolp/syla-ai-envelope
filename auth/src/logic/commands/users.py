@@ -2,7 +2,9 @@ from dataclasses import dataclass
 import hashlib
 
 from domain.values.email import Email
-from infrastructure.jwt.base import BaseJWT
+from domain.values.id import UUID7
+from infrastructure.jwt.base import BaseJWT, TokenType
+from infrastructure.repositories.users.base import BaseUserRepository
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
 from logic.commands.base import BaseCommand, CommandHandler
@@ -41,3 +43,27 @@ class AuthenticateUserCommandHandler(
             RefreshToken(header=JWTHeader(value=Alg("RS256")), payload=JWTPayload(sub=Sub(id=str(user.id), type="refresh")))
         )
         return PairTokens(access_token=access_token, refresh_token=refresh_token)
+
+
+@dataclass(frozen=True)
+class RefreshAuthenticateUserCommand(BaseCommand):
+    refresh_token: str
+
+
+@dataclass(frozen=True)
+class RefreshAuthenticateUserCommandHandler(
+    CommandHandler[RefreshAuthenticateUserCommand, str]
+):
+    uow: BaseUnitOfWork
+    jwt_factory: BaseJWT
+
+    @SQLAlchemyUnitOfWork.provide_async_uow
+    async def handle(self, command: RefreshAuthenticateUserCommand) -> str:
+        refresh_token: RefreshToken = self.jwt_factory.verify(token=command.refresh_token, _type=TokenType.refresh_token)
+        print(refresh_token)
+        if await self.uow.users.get_by_id(UUID7(refresh_token.sub_id)):
+            return self.jwt_factory.encode(
+                AccessToken(header=JWTHeader(value=Alg("RS256")),
+                            payload=JWTPayload(sub=Sub(id=refresh_token.sub_id, type="access")))
+                )
+        raise RefreshAuthenticateException(refresh_token.sub_id)

@@ -3,12 +3,13 @@ from dataclasses import dataclass, field
 import abc
 from typing import Any, Iterable
 
-import uuid6
+from domain.values.base import BaseValueObject
+from domain.values.id import UUID7, uuid7_gen
 
 
 @dataclass
 class BaseEntity(abc.ABC):
-    id: uuid6.UUID = field(default_factory=uuid6.uuid8, kw_only=True)
+    id: UUID7 = field(default_factory=uuid7_gen, kw_only=True)
 
     def __hash__(self) -> int:
         return hash(self.id)
