@@ -17,7 +17,7 @@ RUN mkdir -p /home/user/.cache/huggingface && \
     chown -R user:user /home/user/.cache/huggingface
 
 # Set the working directory and copy the application code
-COPY --chown=user:user . /app/retriever
+COPY --chown=user:user ./rag/retriever/ /app/retriever
 WORKDIR /app/retriever
 
 # Install dependencies with Poetry
