@@ -20,7 +20,7 @@ def create_app():
     app.include_router(chats_router)
     app.include_router(messages_router)
 
-    origins = ["*"]
+    origins = ["http://localhost:3000", "http://31.129.50.189:8000", "http://31.129.50.189:8001"]
 
     app.add_middleware(
         CORSMiddleware,
