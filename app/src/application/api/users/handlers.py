@@ -55,5 +55,6 @@ async def registration(registration_token: RegistrationUserRequestSchema, contai
         mediator: Mediator = container.resolve(Mediator)
         new_user, *_ = await mediator.handle_command(ValidateRegistrationCommand(registration_token))
     except ApplicationException as e:
+        raise e
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": e.message})
     return new_user
