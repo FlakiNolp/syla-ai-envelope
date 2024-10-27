@@ -170,7 +170,7 @@ class RetrievingService:
         :returns: A `RetrieveResult` object containing ranked text and image results.
         """
         dense_query = self.user_bg_dense.encode(query, mode="avg-pooling")
-        sparse_query = self.user_bg_sparse.encode_text_with_sparse_vectors(query)
+        sparse_query = self.user_bg_sparse.encode(query)
         print(sparse_query)
         print(type(sparse_query))
         print(sparse_query[0], sparse_query[1])
