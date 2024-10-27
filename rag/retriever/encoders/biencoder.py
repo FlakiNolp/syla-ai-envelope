@@ -307,11 +307,9 @@ class JinaV3Dense:
                         mode="words",
                     )[0]
 
-                    embeddings = (
-                        self.model.encode(child_chunk, task="retrieval.passage")
-                        .cpu()
-                        .tolist()
-                    )
+                    embeddings = self.model.encode(
+                        child_chunk, task="retrieval.passage"
+                    ).tolist()
 
                     chunks[parent_chunk].append(embeddings)
             texts_embeddings.append(chunks)
@@ -331,5 +329,5 @@ class JinaV3Dense:
             query_embedding = self.model.encode(query, task="retrieval.passage")
         else:
             raise NotImplementedError
-        query_embedding = query_embedding.cpu().tolist()
+        query_embedding = query_embedding.tolist()
         return query_embedding
