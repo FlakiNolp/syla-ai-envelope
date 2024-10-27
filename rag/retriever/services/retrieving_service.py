@@ -211,7 +211,7 @@ class RetrievingService:
         ]
 
         image_results = self.reranker.rerank(query, image_search_results, top_img_k)
-
+        print(len(image_results))
         # Create results
         text_results = [
             TextRetrieveResult(score=score, passage=text)
