@@ -13,11 +13,15 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.base import TokenType
 
 
-class RSAJWT[T: AccessToken | RegistrationToken,TK: RSAKey](BaseJWT):
-    def __init__(self, key: TK, registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
-                 access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
-                 refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
-                 registration_token_expires_in: datetime.timedelta = datetime.timedelta(minutes=15)):
+class RSAJWT[T: AccessToken | RegistrationToken, TK: RSAKey](BaseJWT):
+    def __init__(
+        self,
+        key: TK,
+        registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
+        access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
+        refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
+        registration_token_expires_in: datetime.timedelta = datetime.timedelta(minutes=15),
+    ):
         self.key = key
         self.registry = registry
         self.access_token_expires_in = access_token_expires_in
@@ -25,31 +29,33 @@ class RSAJWT[T: AccessToken | RegistrationToken,TK: RSAKey](BaseJWT):
         self.registration_token_expires_in = registration_token_expires_in
 
     def encode(self, token: T) -> str | tuple[str, str]:
-            if isinstance(token, AccessToken):
-                token.payload.exp = token.payload.iat + self.access_token_expires_in
-                return jwt.encode(
-                    header=token.header.as_generic_type(),
-                    claims=token.payload.model_dump(),
-                    key=self.key,
-                    algorithms=[token.header.value.as_generic_type()],
-                )
-            elif isinstance(token, RegistrationToken):
-                if self.registration_token_expires_in:
-                    token.payload.exp = token.payload.iat + self.registration_token_expires_in
-                return jwt.encode(
-                    header=token.header.as_generic_type(),
-                    claims=token.payload.model_dump(),
-                    key=self.key,
-                    algorithms=[token.header.value.as_generic_type()]
-                )
+        if isinstance(token, AccessToken):
+            token.payload.exp = token.payload.iat + self.access_token_expires_in
+            return jwt.encode(
+                header=token.header.as_generic_type(),
+                claims=token.payload.model_dump(),
+                key=self.key,
+                algorithms=[token.header.value.as_generic_type()],
+            )
+        elif isinstance(token, RegistrationToken):
+            if self.registration_token_expires_in:
+                token.payload.exp = token.payload.iat + self.registration_token_expires_in
+            return jwt.encode(
+                header=token.header.as_generic_type(),
+                claims=token.payload.model_dump(),
+                key=self.key,
+                algorithms=[token.header.value.as_generic_type()],
+            )
 
     @staticmethod
     def convert_from_token_to_entity(token: Token, _type: TokenType) -> T:
         match _type:
             case TokenType.access_token:
-                return AccessToken(header=JWTHeader(value=Alg(token.header['alg'])), payload=JWTPayload(**token.claims))
+                return AccessToken(header=JWTHeader(value=Alg(token.header["alg"])), payload=JWTPayload(**token.claims))
             case TokenType.registration_token:
-                return RegistrationToken(header=JWTHeader(value=Alg(token.header['alg'])), payload=JWTPayload(**token.claims))
+                return RegistrationToken(
+                    header=JWTHeader(value=Alg(token.header["alg"])), payload=JWTPayload(**token.claims)
+                )
 
     def _decode(self, token: str) -> jwt.Token:
         try:

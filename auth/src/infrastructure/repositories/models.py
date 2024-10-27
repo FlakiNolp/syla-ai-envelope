@@ -1,10 +1,5 @@
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import (
-    relationship,
-    mapped_column,
-    Mapped,
-    DeclarativeBase
-)
+from sqlalchemy.orm import relationship, mapped_column, Mapped, DeclarativeBase
 
 from infrastructure.repositories.values import (
     CreatedAt,
@@ -21,12 +16,8 @@ class Base(DeclarativeBase):
 
 class User(Base):
     __tablename__ = "user"
-    email: Mapped[str] = mapped_column(
-        unique=True, nullable=False, comment="Почта пользователя"
-    )
-    password: Mapped[str] = mapped_column(
-        nullable=False, unique=False, comment="Хешированный пароль пользователя"
-    )
+    email: Mapped[str] = mapped_column(unique=True, nullable=False, comment="Почта пользователя")
+    password: Mapped[str] = mapped_column(nullable=False, unique=False, comment="Хешированный пароль пользователя")
     chats: Mapped[list["Chat"]] = relationship(cascade="all", back_populates="user")
 
 

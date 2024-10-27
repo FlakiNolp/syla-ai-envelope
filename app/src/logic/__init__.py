@@ -20,9 +20,16 @@ from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
 from logic.commands.chats import CreateChatHandler, CreateChat
 from logic.commands.message import ReceivedMessage, ReceivedMessageHandler
-from logic.commands.users import AuthorizeUser, AuthorizeUserHandler, CheckExistsEmailHandler, \
-    RegistrateUserCommandHandler, ValidateRegistrationCommandHandler, CheckExistsEmail, RegistrateUserCommand, \
-    ValidateRegistrationCommand
+from logic.commands.users import (
+    AuthorizeUser,
+    AuthorizeUserHandler,
+    CheckExistsEmailHandler,
+    RegistrateUserCommandHandler,
+    ValidateRegistrationCommandHandler,
+    CheckExistsEmail,
+    RegistrateUserCommand,
+    ValidateRegistrationCommand,
+)
 from logic.mediator.base import Mediator
 from logic.queries.chats import GetChatsHandler, GetChats
 from logic.queries.message import GetHistoryMessages, GetHistoryMessagesHandler
@@ -43,7 +50,15 @@ def init_container():
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
     config: ConfigSettings = container.resolve(ConfigSettings)
-    container.register(BaseEmailService, EmailService, host=config.email_host, port=config.email_port, sender_email=config.email, sender_password=config.email_password, host_server=config.host_server)
+    container.register(
+        BaseEmailService,
+        EmailService,
+        host=config.email_host,
+        port=config.email_port,
+        sender_email=config.email,
+        sender_password=config.email_password,
+        host_server=config.host_server,
+    )
 
     def init_mediator() -> Mediator:
         mediator = Mediator()
@@ -54,21 +69,13 @@ def init_container():
         container.register(RegistrateUserCommandHandler)
         container.register(ValidateRegistrationCommandHandler)
 
-        mediator.register_command(
-            CheckExistsEmail, [container.resolve(CheckExistsEmailHandler)]
-        )
-        mediator.register_command(
-            RegistrateUserCommand, [container.resolve(RegistrateUserCommandHandler)]
-        )
-        mediator.register_command(
-            ValidateRegistrationCommand, [container.resolve(ValidateRegistrationCommandHandler)]
-        )
+        mediator.register_command(CheckExistsEmail, [container.resolve(CheckExistsEmailHandler)])
+        mediator.register_command(RegistrateUserCommand, [container.resolve(RegistrateUserCommandHandler)])
+        mediator.register_command(ValidateRegistrationCommand, [container.resolve(ValidateRegistrationCommandHandler)])
         # Authorization
         container.register(AuthorizeUserHandler)
 
-        mediator.register_command(
-            AuthorizeUser, [container.resolve(AuthorizeUserHandler)]
-        )
+        mediator.register_command(AuthorizeUser, [container.resolve(AuthorizeUserHandler)])
 
         # Chats
         container.register(CreateChatHandler)
@@ -97,11 +104,9 @@ def init_container():
                 password=config.db_password,
                 database=config.db_database,
             ),
-            echo=True
+            echo=True,
         )
-        _async_session_maker = async_sessionmaker(
-            _async_engine, expire_on_commit=False
-        )
+        _async_session_maker = async_sessionmaker(_async_engine, expire_on_commit=False)
         return SQLAlchemyUnitOfWork(_async_session_maker)
 
     container.register(
@@ -112,7 +117,9 @@ def init_container():
 
     def init_mongodb():
         config: ConfigSettings = container.resolve(ConfigSettings)
-        async_client: AsyncIOMotorClient = AsyncIOMotorClient(f"mongodb://{config.mongodb_host}:{config.mongodb_port}", uuidRepresentation="standard")
+        async_client: AsyncIOMotorClient = AsyncIOMotorClient(
+            f"mongodb://{config.mongodb_host}:{config.mongodb_port}", uuidRepresentation="standard"
+        )
         return MongoDBMessagesRepository(mongodb_client=async_client, db_name="envelope")
 
     container.register(BaseMessagesRepository, factory=init_mongodb, scope=Scope.singleton)

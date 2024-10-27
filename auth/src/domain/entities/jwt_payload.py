@@ -44,13 +44,9 @@ class JWTPayload(BaseEntity):
 
     def validate(self):
         if self.exp is not None and self.exp <= self.iat:
-            raise JWTPayloadException(
-                "параметр exp должен быть больше ias"
-            )
+            raise JWTPayloadException("параметр exp должен быть больше ias")
         if self.nbf is not None and self.nbf <= self.iat:
-            raise JWTPayloadException(
-                "параметр nbf должен быть больше ias"
-            )
+            raise JWTPayloadException("параметр nbf должен быть больше ias")
         if isinstance(self.aud, list):
             raise JWTPayloadException("параметр aud должен быть списком")
 
@@ -61,10 +57,7 @@ class JWTPayload(BaseEntity):
             if isinstance(obj, BaseValueObject):
                 return obj.as_generic_type()
             elif isinstance(obj, BaseEntity):
-                return {
-                    key: to_dict_recursive(value)
-                    for key, value in obj.model_dump().items()
-                }
+                return {key: to_dict_recursive(value) for key, value in obj.model_dump().items()}
             elif isinstance(obj, dict):
                 return obj
             elif isinstance(obj, Iterable) and not isinstance(obj, str):
@@ -74,9 +67,6 @@ class JWTPayload(BaseEntity):
             else:
                 return obj
 
-        dict_payload = {
-            key: to_dict_recursive(value) for key, value in self.__dict__.items()
-            if value is not None
-        }
+        dict_payload = {key: to_dict_recursive(value) for key, value in self.__dict__.items() if value is not None}
         dict_payload.pop("id")
         return dict_payload

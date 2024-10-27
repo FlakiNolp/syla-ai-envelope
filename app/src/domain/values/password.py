@@ -37,4 +37,3 @@ class Password(BaseValueObject):
 
     def hash_password(self) -> HashedPassword:
         return HashedPassword(hashlib.sha256(self.value.encode("utf8")).hexdigest())
-

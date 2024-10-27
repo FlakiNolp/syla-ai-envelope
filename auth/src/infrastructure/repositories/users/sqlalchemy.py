@@ -13,14 +13,19 @@ from infrastructure.repositories.users.converters import UserConverter
 
 class SQLAlchemyUserRepository(BaseUserRepository, BaseSQLAlchemyRepository):
     async def get_by_id(self, user_id: UUID7) -> User | None:
-        user = (await self._async_transaction.scalars(select(SQLAlchemyUser).filter(SQLAlchemyUser.id == user_id))).one_or_none()
+        user = (
+            await self._async_transaction.scalars(select(SQLAlchemyUser).filter(SQLAlchemyUser.id == user_id))
+        ).one_or_none()
         if user is None:
             return None
         return UserConverter.convert_from_sqlalchemy_to_entity(user)
 
-
     async def get_by_email(self, email: Email) -> DomainUser | None:
-        user = (await self._async_transaction.scalars(select(SQLAlchemyUser).filter(SQLAlchemyUser.email == email.as_generic_type()))).one_or_none()
+        user = (
+            await self._async_transaction.scalars(
+                select(SQLAlchemyUser).filter(SQLAlchemyUser.email == email.as_generic_type())
+            )
+        ).one_or_none()
         if user is None:
             return None
         return UserConverter.convert_from_sqlalchemy_to_entity(user)
