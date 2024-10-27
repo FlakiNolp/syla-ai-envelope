@@ -1,0 +1,1111 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class BaseException {
+   args: 
+   __cause__: 
+   __context__: 
+   __suppress_context__: 
+   __traceback__: 
+   __notes__: 
+   __init__(self, *args: object): 
+   __setstate__(self, __state: dict[str, Any] | None): 
+   with_traceback(self, __tb: TracebackType | None): 
+   add_note(self, __note: str): 
+}
+class Exception
+class node26 as "abc.ABC" {
+   __slots__: 
+}
+class node45 as "abc.ABCMeta" {
+   cls: 
+   __new__(mcls, name, bases, namespace, /, **kwargs): 
+   register(cls, subclass): 
+   __instancecheck__(cls, instance): 
+   __subclasscheck__(cls, subclass): 
+   _dump_registry(cls, file=None): 
+   _abc_registry_clear(cls): 
+   _abc_caches_clear(cls): 
+}
+class node89 as "application.api.chats.schemas.CreateChatRequestSchema" {
+   chat_name: 
+}
+class node72 as "application.api.chats.schemas.CreateChatResponseSchema" {
+   chat_id: 
+   from_entity(cls, chat: Chat): 
+}
+class node107 as "application.api.chats.schemas.GetChatsResponseSchema" {
+   chats: 
+   from_entity(cls, chats: list[Chat]): 
+}
+class node63 as "application.api.chats.schemas.JSONChat" {
+   chat_id: 
+   chat_name: 
+   from_entity(cls, chat: Chat): 
+}
+class node35 as "application.api.messages.schemas.GetHistoryRequestSchema" {
+   chat_id: 
+}
+class node30 as "application.api.messages.schemas.GetHistoryResponseSchema" {
+   messages: 
+   from_entity(cls, messages: list[Message]): 
+}
+class node13 as "application.api.messages.schemas.JSONMessage" {
+   id: 
+   chat_id: 
+   author: 
+   text: 
+   documents: 
+   timestamp: 
+   from_entity(cls, message: Message): 
+}
+class node79 as "application.api.messages.schemas.ReceivedMessageRequestSchema" {
+   message: 
+   chat_id: 
+}
+class node97 as "application.api.schemas.ErrorSchema" {
+   error: 
+}
+class node90 as "configs.config.ConfigSettings" {
+   model_config: 
+   db_host: 
+   db_port: 
+   db_username: 
+   db_password: 
+   db_database: 
+   host_server: 
+   mongodb_host: 
+   mongodb_port: 
+   rag_host: 
+   rag_port: 
+   email: 
+   email_password: 
+   email_host: 
+   email_port: 
+}
+class dict {
+   __hash__: 
+   __init__(self): 
+   __init__(self: dict[str, _VT], **kwargs: _VT): 
+   __init__(self, __map: SupportsKeysAndGetItem[_KT, _VT]): 
+   __init__(self: dict[str, _VT], __map: SupportsKeysAndGetItem[str, _VT], **kwargs: _VT): 
+   __init__(self, __iterable: Iterable[tuple[_KT, _VT]]): 
+   __init__(self: dict[str, _VT], __iterable: Iterable[tuple[str, _VT]], **kwargs: _VT): 
+   __init__(self: dict[str, str], __iterable: Iterable[list[str]]): 
+   __init__(self: dict[bytes, bytes], __iterable: Iterable[list[bytes]]): 
+   __new__(cls, *args: Any, **kwargs: Any): 
+   copy(self): 
+   keys(self): 
+   values(self): 
+   items(self): 
+   fromkeys(cls, __iterable: Iterable[_T], __value: None = None): 
+   fromkeys(cls, __iterable: Iterable[_T], __value: _S): 
+   get(self, __key: _KT): 
+   get(self, __key: _KT, __default: _VT): 
+   get(self, __key: _KT, __default: _T): 
+   pop(self, __key: _KT): 
+   pop(self, __key: _KT, __default: _VT): 
+   pop(self, __key: _KT, __default: _T): 
+   __len__(self): 
+   __getitem__(self, __key: _KT): 
+   __setitem__(self, __key: _KT, __value: _VT): 
+   __delitem__(self, __key: _KT): 
+   __iter__(self): 
+   __eq__(self, __value: object): 
+   __reversed__(self): 
+   __class_getitem__(cls, __item: Any): 
+   __or__(self, __value: dict[_KT, _VT]): 
+   __or__(self, __value: dict[_T1, _T2]): 
+   __ror__(self, __value: dict[_KT, _VT]): 
+   __ror__(self, __value: dict[_T1, _T2]): 
+   __ior__(self, __value: SupportsKeysAndGetItem[_KT, _VT]): 
+   __ior__(self, __value: Iterable[tuple[_KT, _VT]]): 
+}
+class node64 as "domain.entities.access_token.AccessToken" {
+   header: 
+   payload: 
+   as_generic_type(self): 
+   sub(self): 
+   sub_id(self): 
+}
+class node25 as "domain.entities.base.BaseEntity" {
+   id: 
+   __hash__(self): 
+   __eq__(self, __value: "BaseEntity"): 
+   model_dump(self, uuid_conversation: bool = False): 
+}
+class node67 as "domain.entities.chat.Chat" {
+   user_id: 
+   name: 
+   messages: 
+   __hash__(self): 
+   __eq__(self, other): 
+}
+class node9 as "domain.entities.jwt_payload.JWTPayload" {
+   nbf: 
+   exp: 
+   iat: 
+   jti: 
+   iss: 
+   sub: 
+   iat: 
+   exp: 
+   nbf: 
+   aud: 
+   __post_init__(self): 
+   validate(self): 
+   model_dump(self): 
+}
+class node23 as "domain.entities.jwt_payload.Sub" {
+   id: 
+   type: 
+   scopes: 
+   email: 
+   hashed_password: 
+}
+class node49 as "domain.entities.message.Message" {
+   chat_id: 
+   text: 
+   author: 
+   documents: 
+   timestamp: 
+   __hash__(self): 
+   __eq__(self, other): 
+}
+class node76 as "domain.entities.pair_tokens.PairTokens" {
+   access_token: 
+   refresh_token: 
+   __post_init__(self): 
+}
+class node83 as "domain.entities.refresh_token.RefreshToken" {
+   header: 
+   payload: 
+   as_generic_type(self): 
+}
+class node7 as "domain.entities.registration_token.RegistrationToken" {
+   header: 
+   payload: 
+   as_generic_type(self): 
+   sub(self): 
+}
+class node99 as "domain.entities.user.User" {
+   email: 
+   password: 
+   chats: 
+   create_user(cls, email: Email, password: HashedPassword): 
+   create_chat(self, chat_name: ChatName): 
+   delete_chat(self, chat: Chat): 
+}
+class node78 as "domain.exceptions.base.ApplicationException" {
+   message(self): 
+}
+class node54 as "domain.exceptions.chat_name.ChatNameLengthException" {
+   text: 
+   message(self): 
+}
+class node0 as "domain.exceptions.email.EmailValidationException" {
+   text: 
+   message(self): 
+}
+class node70 as "domain.exceptions.jwt.JWTAlgValidationException" {
+   text: 
+   message(self): 
+}
+class node46 as "domain.exceptions.jwt.JWTCreationException" {
+   text: 
+   message(self): 
+}
+class node65 as "domain.exceptions.jwt.JWTHeaderException" {
+   text: 
+   message(self): 
+}
+class node95 as "domain.exceptions.jwt.JWTPayloadException" {
+   text: 
+   message(self): 
+}
+class node75 as "domain.exceptions.jwt.JWTValidationPairException" {
+   text: 
+   message(self): 
+}
+class node84 as "domain.exceptions.jwt.JWTVerifyException" {
+   text: 
+   message(self): 
+}
+class node32 as "domain.exceptions.password.PasswordValidationException" {
+   text: 
+   message(self): 
+}
+class node22 as "domain.values.alg.Alg" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node98 as "domain.values.author.Author" {
+   user: 
+   ai: 
+}
+class node53 as "domain.values.base.BaseValueObject" {
+   value: 
+   __post_init__(self): 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node41 as "domain.values.chat_name.ChatName" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node74 as "domain.values.email.Email" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node15 as "domain.values.jwt_header.JWTHeader" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node61 as "domain.values.password.HashedPassword" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node93 as "domain.values.password.Password" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+   hash_password(self): 
+}
+class node91 as "enum.Enum" {
+   result: 
+   __context__: 
+   exc: 
+   ve_exc: 
+   __signature__(cls): 
+   __new__(cls, value): 
+   __init__(self, *args, **kwds): 
+   _generate_next_value_(name, start, count, last_values): 
+   _missing_(cls, value): 
+   __repr__(self): 
+   __str__(self): 
+   __dir__(self): 
+   __format__(self, format_spec): 
+   __hash__(self): 
+   __reduce_ex__(self, proto): 
+   __deepcopy__(self,memo): 
+   __copy__(self): 
+   name(self): 
+   value(self): 
+}
+class node3 as "enum.EnumMeta" {
+   _member_names_: 
+   _member_map_: 
+   _value2member_map_: 
+   __new__(
+            metacls: type[_typeshed.Self],
+            cls: str,
+            bases: tuple[type, ...],
+            classdict: _EnumDict,
+            *,
+            boundary: FlagBoundary | None = None,
+            _simple: bool = False,
+            **kwds: Any,
+        ): 
+   __prepare__(metacls, cls: str, bases: tuple[type, ...], **kwds: Any): 
+   __iter__(self: type[_EnumMemberT]): 
+   __reversed__(self: type[_EnumMemberT]): 
+   __contains__(self: type[Any], value: object): 
+   __getitem__(self: type[_EnumMemberT], name: str): 
+   __members__(self: type[_EnumMemberT]): 
+   __len__(self): 
+   __bool__(self): 
+   __dir__(self): 
+   __call__(cls: type[_EnumMemberT], value: Any, names: None = None): 
+   __call__(
+            cls,
+            value: str,
+            names: _EnumNames,
+            *,
+            module: str | None = None,
+            qualname: str | None = None,
+            type: type | None = None,
+            start: int = 1,
+            boundary: FlagBoundary | None = None,
+        ): 
+   __call__(cls: type[_EnumMemberT], value: Any, *values: Any): 
+}
+class node56 as "infrastructure.email_service.base.BaseEmailService" {
+   send(self, receiver_email: Email, subject: str, body: Any): 
+   send_registration_mail(self, receiver_email: Email, registration_token: str): 
+}
+class node48 as "infrastructure.email_service.email_service.EmailService" {
+   server: 
+   host_server: 
+   port: 
+   sender_password: 
+   host: 
+   sender_email: 
+   __init__(self, host: str, port: int, sender_email: str, sender_password: str, host_server: str): 
+   send(self, receiver_email: Email, subject: str, body: Any): 
+   send_registration_mail(self, receiver_email: Email, registration_token: str): 
+}
+class node71 as "infrastructure.exceptions.base.InfrastructureException" {
+   message(self): 
+}
+class node16 as "infrastructure.exceptions.email_service.SendEmailException" {
+   text: 
+   message(self): 
+}
+class node43 as "infrastructure.exceptions.rag.RagRequestException" {
+   text: 
+   message(self): 
+}
+class node66 as "infrastructure.integrations.rag.base.BaseRag" {
+   generate_answer(self, message: Message, chat_id: UUID7): 
+}
+class node33 as "infrastructure.integrations.rag.envelope.Rag" {
+   port: 
+   host: 
+   retry_attempts: 
+   timeout: 
+   __init__(self, host: str, port: int, retry_attempts: int = 3, timeout: int = 15): 
+   send_requests_with_repeat(self, client: ClientSession, message: Message): 
+   generate_answer(self, message: Message, chat_id: UUID7): 
+}
+class node94 as "infrastructure.jwt.base.BaseJWT" {
+   encode(self, token: T): 
+   _decode(self, token: str): 
+   decode(self, token: str, _type: TokenType): 
+   verify(self, token: str, _type: TokenType): 
+   validate(self, token: T): 
+}
+class node39 as "infrastructure.jwt.base.TokenType" {
+   access_token: 
+   refresh_token: 
+   registration_token: 
+}
+class node100 as "infrastructure.jwt.rsa.RSAJWT" {
+   registry: 
+   registration_token_expires_in: 
+   key: 
+   access_token_expires_in: 
+   __init__(
+        self,
+        key: TK,
+        registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
+        access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
+        registration_token_expires_in: datetime.timedelta = datetime.timedelta(minutes=15),
+    ): 
+   encode(self, token: T): 
+   convert_from_token_to_entity(token: Token, _type: TokenType): 
+   _decode(self, token: str): 
+   decode(self, token: str, _type: TokenType): 
+   verify(self, token: str, _type: TokenType): 
+   validate(self, token: str | jwt.Token): 
+}
+class node112 as "infrastructure.repositories.base_motor_repository.BaseMongoDBRepository" {
+   mongo_db_db_name: 
+   mongo_db_client: 
+   __init__(self, mongodb_client: AgnosticClient, db_name: str): 
+   _db(self): 
+   _collection(self, collection_name: str): 
+   provide_async_session(func): 
+}
+class node103 as "infrastructure.repositories.base_sqlalchemy_repository.BaseSQLAlchemyRepository" {
+   _async_transaction: 
+   __init__(self, session: AsyncSession): 
+}
+class node77 as "infrastructure.repositories.chats.base.BaseChatRepository" {
+   add(self, chat: Chat): 
+   get_chats_by_user_id(self, user_id: UUID7): 
+   exists_by_user_id(self, user_id: UUID7, chat_id: UUID7): 
+}
+class node10 as "infrastructure.repositories.chats.converters.ChatConverter" {
+   convert_from_sqlalchemy_to_entity(cls, model: Chat): 
+   convert_from_entity_to_sqlalchemy(cls, entity: DomainChat): 
+}
+class node8 as "infrastructure.repositories.chats.sqlalchemy.SQLAlchemyChatRepository" {
+   add(self, chat: Chat): 
+   get_chats_by_user_id(self, user_id: UUID7): 
+   exists_by_user_id(self, user_id: UUID7, chat_id: UUID7): 
+}
+class node73 as "infrastructure.repositories.messages.base.BaseMessagesRepository" {
+   add_message(self, message: Message, chat_id: str): 
+   get_all_messages(self, chat_id: str): 
+}
+class node62 as "infrastructure.repositories.messages.converters.MessageConverter" {
+   convert_from_json_to_entity(cls, model: dict): 
+   convert_from_entity_to_json(cls, entity: DomainMessage): 
+}
+class node59 as "infrastructure.repositories.messages.mongodb.MongoDBMessagesRepository" {
+   add_message(self, message: Message, chat_id: str, async_session: AgnosticClientSession = None): 
+   get_all_messages(self, chat_id: str, async_session: AgnosticClientSession = None): 
+}
+class node44 as "infrastructure.repositories.models.Base" {
+   id: 
+   registered_at: 
+   updated_at: 
+}
+class node105 as "infrastructure.repositories.models.Chat" {
+   __tablename__: 
+   name: 
+   user_id: 
+   user: 
+}
+class node58 as "infrastructure.repositories.models.User" {
+   __tablename__: 
+   email: 
+   password: 
+   chats: 
+}
+class node110 as "infrastructure.repositories.users.base.BaseUserRepository" {
+   get_by_email(self, email: Email): 
+   add(self, user: User): 
+   get_by_id(self, user_id: UUID7): 
+}
+class node6 as "infrastructure.repositories.users.converters.UserConverter" {
+   convert_from_sqlalchemy_to_entity(cls, model: User): 
+   convert_from_entity_to_sqlalchemy(cls, entity: DomainUser): 
+}
+class node24 as "infrastructure.repositories.users.sqlalchemy.SQLAlchemyUserRepository" {
+   get_by_email(self, email: Email): 
+   add(self, user: User): 
+   get_by_id(self, user_id: UUID7): 
+}
+class node19 as "infrastructure.unit_of_work.base.BaseUnitOfWork" {
+   users: 
+   chats: 
+   __init__(self): 
+   __aenter__(self, *args, **kwargs): 
+   __aexit__(self, *args): 
+   commit(self): 
+   rollback(self): 
+   flush(self, *args): 
+}
+class node68 as "infrastructure.unit_of_work.sqlalchemy.SQLAlchemyUnitOfWork" {
+   _async_session_maker: 
+   chats: 
+   _async_transaction: 
+   users: 
+   __init__(self, session_maker: async_sessionmaker[AsyncSession]): 
+   _provide_async_transaction(func): 
+   provide_async_uow(func): 
+   __aenter__(self, async_transaction: AsyncSession = None): 
+   __aexit__(self, *args): 
+   commit(self): 
+   rollback(self): 
+   flush(self, *args): 
+   begin_nested(self): 
+}
+class node38 as "logic.commands.base.BaseCommand"
+class node86 as "logic.commands.base.CommandHandler" {
+   handle(self, command: CT): 
+}
+class node82 as "logic.commands.chats.CreateChat" {
+   user_id: 
+   chat_name: 
+}
+class node85 as "logic.commands.chats.CreateChatHandler" {
+   uow: 
+   handle(self, command: CreateChat): 
+}
+class node113 as "logic.commands.message.ReceivedMessage" {
+   text: 
+   user_id: 
+   chat_id: 
+}
+class node52 as "logic.commands.message.ReceivedMessageHandler" {
+   uow: 
+   messages: 
+   rag: 
+   handle(self, command: ReceivedMessage): 
+}
+class node21 as "logic.commands.users.AuthorizeUser" {
+   token: 
+}
+class node87 as "logic.commands.users.AuthorizeUserHandler" {
+   jwt_service: 
+   handle(self, command: AuthorizeUser): 
+}
+class node4 as "logic.commands.users.CheckExistsEmail" {
+   email: 
+}
+class node36 as "logic.commands.users.CheckExistsEmailHandler" {
+   uow: 
+   handle(self, command: CheckExistsEmail): 
+}
+class node29 as "logic.commands.users.RegistrateUserCommand" {
+   email: 
+   password: 
+}
+class node60 as "logic.commands.users.RegistrateUserCommandHandler" {
+   email_service: 
+   jwt_service: 
+   handle(self, command: RegistrateUserCommand): 
+}
+class node102 as "logic.commands.users.ValidateRegistrationCommand" {
+   token: 
+}
+class node51 as "logic.commands.users.ValidateRegistrationCommandHandler" {
+   jwt_service: 
+   uow: 
+   handle(self, command: ValidateRegistrationCommand): 
+}
+class node92 as "logic.exceptions.base.LogicException" {
+   message(self): 
+}
+class node34 as "logic.exceptions.chats.ChatNotExistsException" {
+   text: 
+   message(self): 
+}
+class node106 as "logic.exceptions.mediator.CommandHandlersNotRegisteredException" {
+   command_type: 
+   message(self): 
+}
+class node17 as "logic.exceptions.mediator.QueryHandlersNotRegisteredException" {
+   event_type: 
+   message(self): 
+}
+class node18 as "logic.exceptions.messages.AnswerGenerationException" {
+   text: 
+   message(self): 
+}
+class node14 as "logic.exceptions.users.UserAuthenticateException" {
+   message(self): 
+}
+class node20 as "logic.exceptions.users.UserEmailExistsException" {
+   text: 
+   message(self): 
+}
+class node2 as "logic.exceptions.users.UserIdExistsException" {
+   text: 
+   message(self): 
+}
+class node50 as "logic.mediator.base.Mediator" {
+   commands_map: 
+   queries_map: 
+   register_command(self, command: Type[CT], command_handlers: Iterable[CommandHandler[CT, CR]]): 
+   register_query(self, query: Type[QT], query_handler: BaseQueryHandler[QT, QR]): 
+   handle_command(self, command: BaseCommand): 
+   handle_query(self, query: BaseQuery): 
+}
+class node31 as "logic.queries.base.BaseQuery"
+class node11 as "logic.queries.base.BaseQueryHandler" {
+   handle(self, query: QT): 
+}
+class node27 as "logic.queries.chats.GetChats" {
+   user_id: 
+}
+class node1 as "logic.queries.chats.GetChatsHandler" {
+   uow: 
+   handle(self, query: GetChats): 
+}
+class node40 as "logic.queries.message.GetHistoryMessages" {
+   user_id: 
+   chat_id: 
+}
+class node88 as "logic.queries.message.GetHistoryMessagesHandler" {
+   uow: 
+   messages: 
+   handle(self, query: GetHistoryMessages): 
+}
+class object {
+   __doc__: 
+   __dict__: 
+   __module__: 
+   __annotations__: 
+   __class__(self): 
+   __class__(self, __type: type[object]): 
+   __init__(self): 
+   __new__(cls): 
+   __setattr__(self, __name: str, __value: Any): 
+   __delattr__(self, __name: str): 
+   __eq__(self, __value: object): 
+   __ne__(self, __value: object): 
+   __str__(self): 
+   __repr__(self): 
+   __hash__(self): 
+   __format__(self, __format_spec: str): 
+   __getattribute__(self, __name: str): 
+   __sizeof__(self): 
+   __reduce__(self): 
+   __reduce_ex__(self, __protocol: SupportsIndex): 
+   __getstate__(self): 
+   __dir__(self): 
+   __init_subclass__(cls): 
+   __subclasshook__(cls, __subclass: type): 
+}
+class node55 as "pydantic._internal._model_construction.ModelMetaclass" {
+   __pydantic_complete__: 
+   __pydantic_post_init__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_decorators__: 
+   model_computed_fields: 
+   __pydantic_custom_init__: 
+   __pydantic_parent_namespace__: 
+   __new__(
+        mcs,
+        cls_name: str,
+        bases: tuple[type[Any], ...],
+        namespace: dict[str, Any],
+        __pydantic_generic_metadata__: PydanticGenericMetadata | None = None,
+        __pydantic_reset_parent_namespace__: bool = True,
+        _create_model_module: str | None = None,
+        **kwargs: Any,
+    ): 
+   __getattr__(self, item: str): 
+   __prepare__(cls, *args: Any, **kwargs: Any): 
+   __instancecheck__(self, instance: Any): 
+   _collect_bases_data(bases: tuple[type[Any], ...]): 
+   __fields__(self): 
+   __dir__(self): 
+}
+class node5 as "pydantic.main.BaseModel" {
+   __pydantic_parent_namespace__: 
+   model_config: 
+   model_fields: 
+   model_computed_fields: 
+   __class_vars__: 
+   __private_attributes__: 
+   __signature__: 
+   __pydantic_complete__: 
+   __pydantic_core_schema__: 
+   __pydantic_custom_init__: 
+   __pydantic_decorators__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_parent_namespace__: 
+   __pydantic_post_init__: 
+   __pydantic_root_model__: 
+   __pydantic_serializer__: 
+   __pydantic_validator__: 
+   __pydantic_extra__: 
+   __pydantic_fields_set__: 
+   __pydantic_private__: 
+   __pydantic_core_schema__: 
+   __pydantic_validator__: 
+   __pydantic_serializer__: 
+   __slots__: 
+   __pydantic_base_init__: 
+   __repr_name__: 
+   __repr_str__: 
+   __pretty__: 
+   __rich_repr__: 
+   __init__(self, /, **data: Any): 
+   model_extra(self): 
+   model_fields_set(self): 
+   model_construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   model_copy(self, *, update: dict[str, Any] | None = None, deep: bool = False): 
+   model_dump(
+        self,
+        *,
+        mode: Literal['json', 'python'] | str = 'python',
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_dump_json(
+        self,
+        *,
+        indent: int | None = None,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_json_schema(
+        cls,
+        by_alias: bool = True,
+        ref_template: str = DEFAULT_REF_TEMPLATE,
+        schema_generator: type[GenerateJsonSchema] = GenerateJsonSchema,
+        mode: JsonSchemaMode = 'validation',
+    ): 
+   model_parametrized_name(cls, params: tuple[type[Any], ...]): 
+   model_post_init(self, __context: Any): 
+   model_rebuild(
+        cls,
+        *,
+        force: bool = False,
+        raise_errors: bool = True,
+        _parent_namespace_depth: int = 2,
+        _types_namespace: dict[str, Any] | None = None,
+    ): 
+   model_validate(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        from_attributes: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_json(
+        cls,
+        json_data: str | bytes | bytearray,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_strings(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   __get_pydantic_core_schema__(cls, source: type[BaseModel], handler: GetCoreSchemaHandler, /): 
+   __get_pydantic_json_schema__(
+        cls,
+        core_schema: CoreSchema,
+        handler: GetJsonSchemaHandler,
+        /,
+    ): 
+   __pydantic_init_subclass__(cls, **kwargs: Any): 
+   __class_getitem__(
+        cls, typevar_values: type[Any] | tuple[type[Any], ...]
+    ): 
+   __copy__(self): 
+   __deepcopy__(self, memo: dict[int, Any] | None = None): 
+   __getattr__(self, item: str): 
+   __setattr__(self, name: str, value: Any): 
+   __delattr__(self, item: str): 
+   _check_frozen(self, name: str, value: Any): 
+   __getstate__(self): 
+   __setstate__(self, state: dict[Any, Any]): 
+   __eq__(self, other: Any): 
+   __init_subclass__(cls, **kwargs: Unpack[ConfigDict]): 
+   __iter__(self): 
+   __repr__(self): 
+   __repr_args__(self): 
+   __str__(self): 
+   __fields__(self): 
+   __fields_set__(self): 
+   dict(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ): 
+   json(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        encoder: Callable[[Any], Any] | None = PydanticUndefined,  # type: ignore[assignment]
+        models_as_dict: bool = PydanticUndefined,  # type: ignore[assignment]
+        **dumps_kwargs: Any,
+    ): 
+   parse_obj(cls, obj: Any): 
+   parse_raw(  # noqa: D102
+        cls,
+        b: str | bytes,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   parse_file(  # noqa: D102
+        cls,
+        path: str | Path,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   from_orm(cls, obj: Any): 
+   construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   copy(
+        self,
+        *,
+        include: AbstractSetIntStr | MappingIntStrAny | None = None,
+        exclude: AbstractSetIntStr | MappingIntStrAny | None = None,
+        update: Dict[str, Any] | None = None,  # noqa UP006
+        deep: bool = False,
+    ): 
+   schema(  # noqa: D102
+        cls, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE
+    ): 
+   schema_json(  # noqa: D102
+        cls, *, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE, **dumps_kwargs: Any
+    ): 
+   validate(cls, value: Any): 
+   update_forward_refs(cls, **localns: Any): 
+   _iter(self, *args: Any, **kwargs: Any): 
+   _copy_and_set_values(self, *args: Any, **kwargs: Any): 
+   _get_value(cls, *args: Any, **kwargs: Any): 
+   _calculate_keys(self, *args: Any, **kwargs: Any): 
+}
+class node12 as "pydantic_settings.main.BaseSettings" {
+   __pydantic_base_init__: 
+   model_config: 
+   __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+        **values: Any,
+    ): 
+   settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ): 
+   _settings_build_values(
+        self,
+        init_kwargs: dict[str, Any],
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = None,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+    ): 
+}
+class node28 as "sqlalchemy.inspection.Inspectable" {
+   __slots__: 
+}
+class node37 as "sqlalchemy.orm.decl_api.DeclarativeAttributeIntercept"
+class node42 as "sqlalchemy.orm.decl_api.DeclarativeBase" {
+   _sa_registry: 
+   registry: 
+   metadata: 
+   __name__: 
+   __mapper__: 
+   __table__: 
+   __tablename__: 
+   __mapper_args__: 
+   __table_args__: 
+   _sa_inspect_type(self): 
+   _sa_inspect_instance(self): 
+   __init__(self, **kw: Any): 
+   __init_subclass__(cls, **kw: Any): 
+}
+class node96 as "typing.Collection" {
+   __len__(self): 
+}
+class node81 as "typing.Container" {
+   __contains__(self, x: object, /): 
+}
+class node108 as "typing.Hashable" {
+   __hash__(self): 
+}
+class node109 as "typing.Iterable" {
+   __iter__(self): 
+}
+class node111 as "typing.Iterator" {
+   __next__(self): 
+   __iter__(self): 
+}
+class node69 as "typing.Mapping" {
+   __getitem__(self, key: _KT, /): 
+   get(self, key: _KT, /): 
+   get(self, key: _KT, /, default: _VT_co | _T): 
+   items(self): 
+   keys(self): 
+   values(self): 
+   __contains__(self, key: object, /): 
+   __eq__(self, other: object, /): 
+}
+class node57 as "typing.MutableMapping" {
+   __setitem__(self, key: _KT, value: _VT, /): 
+   __delitem__(self, key: _KT, /): 
+   clear(self): 
+   pop(self, key: _KT, /): 
+   pop(self, key: _KT, /, default: _VT): 
+   pop(self, key: _KT, /, default: _T): 
+   popitem(self): 
+   setdefault(self: MutableMapping[_KT, _T | None], key: _KT, default: None = None, /): 
+   setdefault(self, key: _KT, default: _VT, /): 
+   update(self, m: SupportsKeysAndGetItem[_KT, _VT], /, **kwargs: _VT): 
+   update(self, m: Iterable[tuple[_KT, _VT]], /, **kwargs: _VT): 
+   update(self, **kwargs: _VT): 
+}
+
+BaseException  ^-[#595959,plain]-  object        
+Exception      ^-[#595959,plain]-  BaseException 
+node26         ^-[#595959,plain]-  object        
+node89         ^-[#595959,plain]-  node5         
+node72         ^-[#595959,plain]-  node5         
+node107        ^-[#595959,plain]-  node5         
+node63         ^-[#595959,plain]-  node5         
+node35         ^-[#595959,plain]-  node5         
+node30         ^-[#595959,plain]-  node5         
+node13         ^-[#595959,plain]-  node5         
+node79         ^-[#595959,plain]-  node5         
+node97         ^-[#595959,plain]-  node5         
+node90         ^-[#595959,plain]-  node12        
+dict           ^-[#595959,dashed]-  node108       
+dict           ^-[#595959,dashed]-  node111       
+dict           ^-[#595959,plain]-  node57        
+node64         ^-[#595959,plain]-  node25        
+node25         ^-[#595959,plain]-  node26        
+node25         ^-[#595959,dashed]-  node108       
+node67         ^-[#595959,plain]-  node25        
+node67         ^-[#595959,dashed]-  node108       
+node9          ^-[#595959,plain]-  node25        
+node23         ^-[#595959,plain]-  object        
+node49         ^-[#595959,plain]-  node25        
+node49         ^-[#595959,dashed]-  node108       
+node76         ^-[#595959,plain]-  node25        
+node83         ^-[#595959,plain]-  node25        
+node7          ^-[#595959,plain]-  node25        
+node99         ^-[#595959,plain]-  node25        
+node78         ^-[#595959,plain]-  Exception     
+node54         ^-[#595959,plain]-  node78        
+node0          ^-[#595959,plain]-  node78        
+node70         ^-[#595959,plain]-  node78        
+node46         ^-[#595959,plain]-  node78        
+node65         ^-[#595959,plain]-  node78        
+node95         ^-[#595959,plain]-  node78        
+node75         ^-[#595959,plain]-  node78        
+node84         ^-[#595959,plain]-  node78        
+node32         ^-[#595959,plain]-  node78        
+node22         ^-[#595959,plain]-  node53        
+node98         ^-[#595959,plain]-  node91        
+node53         ^-[#595959,plain]-  node26        
+node41         ^-[#595959,plain]-  node53        
+node74         ^-[#595959,plain]-  node53        
+node15         ^-[#595959,plain]-  node53        
+node61         ^-[#595959,plain]-  node53        
+node93         ^-[#595959,plain]-  node53        
+node91         <-[#595959,dashed]- "isinstanceof" node3         
+node91         ^-[#595959,plain]-  object        
+node91         ^-[#595959,dashed]-  node108       
+node3          ^-[#595959,dashed]-  node109       
+node3          ^-[#595959,dashed]-  node111       
+node56         ^-[#595959,plain]-  node26        
+node48         ^-[#595959,plain]-  node56        
+node71         ^-[#595959,plain]-  node78        
+node16         ^-[#595959,plain]-  node71        
+node43         ^-[#595959,plain]-  node71        
+node66         ^-[#595959,plain]-  node26        
+node33         ^-[#595959,plain]-  node66        
+node94         ^-[#595959,plain]-  node26        
+node39         ^-[#595959,plain]-  node91        
+node100        ^-[#595959,plain]-  node94        
+node112        ^-[#595959,plain]-  object        
+node103        ^-[#595959,plain]-  node26        
+node77         ^-[#595959,plain]-  node26        
+node10         ^-[#595959,plain]-  object        
+node8          ^-[#595959,plain]-  node103       
+node8          ^-[#595959,plain]-  node77        
+node73         ^-[#595959,plain]-  node26        
+node62         ^-[#595959,plain]-  object        
+node59         ^-[#595959,plain]-  node112       
+node59         ^-[#595959,plain]-  node73        
+node44         ^-[#595959,plain]-  node42        
+node105        ^-[#595959,plain]-  node44        
+node58         ^-[#595959,plain]-  node44        
+node110        ^-[#595959,plain]-  node26        
+node6          ^-[#595959,plain]-  object        
+node24         ^-[#595959,plain]-  node103       
+node24         ^-[#595959,plain]-  node110       
+node19         ^-[#595959,plain]-  node26        
+node68         ^-[#595959,plain]-  node19        
+node38         ^-[#595959,plain]-  node26        
+node86         ^-[#595959,plain]-  node26        
+node82         ^-[#595959,plain]-  node38        
+node85         ^-[#595959,plain]-  node86        
+node113        ^-[#595959,plain]-  node38        
+node52         ^-[#595959,plain]-  node86        
+node21         ^-[#595959,plain]-  node38        
+node87         ^-[#595959,plain]-  node86        
+node4          ^-[#595959,plain]-  node38        
+node36         ^-[#595959,plain]-  node86        
+node29         ^-[#595959,plain]-  node38        
+node60         ^-[#595959,plain]-  node86        
+node102        ^-[#595959,plain]-  node38        
+node51         ^-[#595959,plain]-  node86        
+node92         ^-[#595959,plain]-  node78        
+node34         ^-[#595959,plain]-  node92        
+node106        ^-[#595959,plain]-  node92        
+node17         ^-[#595959,plain]-  node92        
+node18         ^-[#595959,plain]-  node92        
+node14         ^-[#595959,plain]-  node92        
+node20         ^-[#595959,plain]-  node92        
+node2          ^-[#595959,plain]-  node92        
+node50         ^-[#595959,plain]-  object        
+node31         ^-[#595959,plain]-  node26        
+node11         ^-[#595959,plain]-  node26        
+node27         ^-[#595959,plain]-  node31        
+node1          ^-[#595959,plain]-  node11        
+node40         ^-[#595959,plain]-  node31        
+node88         ^-[#595959,plain]-  node11        
+object         ^-[#595959,dashed]-  node108       
+node55         ^-[#595959,plain]-  node45        
+node5          ^-[#595959,plain]-  object        
+node5          <-[#595959,dashed]- "isinstanceof" node55        
+node5          ^-[#595959,dashed]-  node109       
+node12         ^-[#595959,plain]-  node5         
+node28         ^-[#595959,plain]-  object        
+node37         ^-[#595959,plain]-  node28        
+node42         ^-[#595959,plain]-  node28        
+node42         <-[#595959,dashed]- "isinstanceof" node37        
+node96         ^-[#595959,plain]-  node81        
+node96         ^-[#595959,plain]-  node109       
+node57         ^-[#595959,plain]-  node69        
+@enduml
