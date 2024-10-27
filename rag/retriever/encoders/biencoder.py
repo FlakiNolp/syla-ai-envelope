@@ -220,7 +220,7 @@ class UserBGEDense(DenseBiEncoder):
                         hidden_states[:, start:stop, :].mean(dim=1)
                     )
                     # chunk_embedding = nn.functional.tanh(model.pooler.dense(chunk_embedding)).squeeze().detach().numpy()
-                    chunk_embedding = chunk_embedding.cpu().squeeze().to_list()
+                    chunk_embedding = chunk_embedding.cpu().squeeze().tolist()
                     late_chunks[
                         self.tokenizer.convert_tokens_to_string(tokenized_chunk)
                     ] = chunk_embedding
@@ -242,10 +242,10 @@ class UserBGEDense(DenseBiEncoder):
             query_embedding = nn.functional.tanh(
                 self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
             )
-            query_embedding = query_embedding.cpu().squeeze().to_list()
+            query_embedding = query_embedding.cpu().squeeze().tolist()
         elif mode == "cls-pooling":
             query_embedding = (
-                self.model(**tokenized_query)["pooler_output"].cpu().squeeze().to_list()
+                self.model(**tokenized_query)["pooler_output"].cpu().squeeze().tolist()
             )
         else:
             raise NotImplementedError
