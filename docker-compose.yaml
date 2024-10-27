@@ -95,7 +95,7 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: envelope
-      HOST_SERVER: localhost:8000
+      HOST_SERVER: "${HOST_SERVER}"
       MONGODB_HOST: mongodb
       MONGODB_PORT: 27017
       RAG_HOST: rag-chat
