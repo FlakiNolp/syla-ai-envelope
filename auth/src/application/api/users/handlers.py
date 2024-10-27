@@ -22,9 +22,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token", scopes={"read_api": "rea
 
 @router.post("/token", status_code=status.HTTP_200_OK, description="Эндпоинт верифицирует пользователя и возвращает пару токенов access-token и refresh-token",
              responses={
+                 status.HTTP_200_OK: {"model": AuthenticateUserResponseSchema},
                  status.HTTP_401_UNAUTHORIZED: {"model": ErrorSchema},
              })
-async def token(response: JSONResponse, form_data: Annotated[OAuth2PasswordRequestForm, Depends()], container: Container = Depends(_init_container)):
+async def token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], container: Container = Depends(_init_container)):
     try:
         mediator: Mediator = container.resolve(Mediator)
         pair_tokens: PairTokens = (await mediator.handle_command(AuthenticateUserCommand(email=form_data.username, password=form_data.password)))[0]
@@ -32,11 +33,7 @@ async def token(response: JSONResponse, form_data: Annotated[OAuth2PasswordReque
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": e.message})
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": str(e)})
-    response.status_code = 200
-    response.body = AuthenticateUserResponseSchema.from_entity(pair_tokens).model_dump_json().encode()
-    response.set_cookie(key="refresh_token", value=pair_tokens.refresh_token,
-                        expires=int(datetime.timedelta(days=30).total_seconds()), httponly=True, samesite=None, domain="31.129.50.189:8001")
-    return response
+    return AuthenticateUserResponseSchema.from_entity(pair_tokens)
 
 
 @router.post("/refresh", status_code=status.HTTP_200_OK, description="Эндпоинт верифицирует refresh-token и возвращает access-token",
