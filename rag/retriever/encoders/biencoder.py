@@ -236,7 +236,7 @@ class UserBGEDense(DenseBiEncoder):
         :returns: The dense embedding of the query.
         """
         tokenized_query = self.tokenizer(
-            query, padding=True, truncation=True, return_tensors="pt", input_ids=True
+            query, padding=True, truncation=True, return_tensors="pt"
         ).to(self.device)
         if mode == "avg-pooling":
             query_embedding = nn.functional.tanh(
