@@ -25,20 +25,6 @@ services:
     networks:
       backend:
 
-#  migrate:
-#    build:
-#      context: .
-#      dockerfile: dockerfiles/migration.Dockerfile
-#    environment:
-#      DB_HOST: localhost
-#      DB_PORT: 5432
-#      DB_USERNAME: postgres
-#      DB_PASSWORD: postgres
-#      DB_DATABASE: envelope
-#    volumes:
-#      - ./migration:/src
-#    command: [ "alembic", "upgrade", "head" ]  # Команда для выполнения миграций
-
   mongodb:
     container_name: mongodb-envelope
     image: mongo:latest
@@ -127,15 +113,15 @@ services:
     networks:
       backend:
 
-#  rag-retriever:
-#    build:
-#      context: .
-#      dockerfile: dockerfiles/rag.retriever.Dockerfile
-#    container_name: rag-retriever-envelope
-#    volumes:
-#      - ~/.cache/huggingface:/home/user/.cache/huggingface
-#    networks:
-#      backend:
+  rag-retriever:
+    build:
+      context: .
+      dockerfile: dockerfiles/rag.retriever.Dockerfile
+    container_name: rag-retriever-envelope
+    volumes:
+      - ~/.cache/huggingface:/home/user/.cache/huggingface
+    networks:
+      backend:
 
 volumes:
   postgres-data:
