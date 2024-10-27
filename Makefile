@@ -11,6 +11,3 @@ lint:
 
 stop:
 	docker compose stop
-
-envs:
-	source .profile

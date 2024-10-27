@@ -20,6 +20,7 @@ class GetChatsHandler(BaseQueryHandler[GetChats, list[Chat]]):
     @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, query: GetChats) -> list[Chat]:
         user = await self.uow.users.get_by_id(UUID7(query.user_id))
+        print(user)
         if user is None:
             raise UserIdExistsException(query.user_id)
         chats = await self.uow.chats.get_chats_by_user_id(UUID7(query.user_id))
