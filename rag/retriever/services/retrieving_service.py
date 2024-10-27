@@ -216,10 +216,13 @@ class RetrievingService:
             TextRetrieveResult(score=score, passage=text)
             for score, text in ranked_results
         ]
-        image_results = [
-            ImageRetrieveResult(score=score, b64_image=img, caption=caption)
-            for score, (img, caption) in image_results
-        ]
+
+        image_results = []
+        for image_result in image_results:
+            score = image_result[0]
+            img, caption = image_result[1]
+            image_results.append(ImageRetrieveResult(score=score, b64_image=img, caption=caption))
+
         return RetrieveResult(text_results=text_results, image_results=image_results)
 
 
