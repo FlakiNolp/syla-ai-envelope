@@ -203,7 +203,7 @@ class UserBGEDense(DenseBiEncoder):
                 hidden_states = hidden_states[:, 1:-1, :]  # Remove special tokens
 
                 tokenized_parent_chunk = self.tokenizer.convert_ids_to_tokens(
-                    tokenized_parent_chunk["input_ids"].squeeze().cpu().tolist(),
+                    tokenized_parent_chunk["input_ids"].cpu().squeeze().tolist(),
                     skip_special_tokens=True,
                 )
 
@@ -235,18 +235,17 @@ class UserBGEDense(DenseBiEncoder):
         :param query: The query string to be encoded.
         :returns: The dense embedding of the query.
         """
-        tokenized_query = self.tokenizer(query, padding=True, truncation=True).to(self.device)
+        tokenized_query = self.tokenizer(query, padding=True, truncation=True).to(
+            self.device
+        )
         if mode == "avg-pooling":
             query_embedding = nn.functional.tanh(
                 self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
             )
-            query_embedding = query_embedding.squeeze().detach().numpy()
+            query_embedding = query_embedding.cpu().squeeze().to_list()
         elif mode == "cls-pooling":
             query_embedding = (
-                self.model(**tokenized_query)["pooler_output"]
-                .squeeze()
-                .detach()
-                .numpy()
+                self.model(**tokenized_query)["pooler_output"].cpu().squeeze().to_list()
             )
         else:
             raise NotImplementedError
