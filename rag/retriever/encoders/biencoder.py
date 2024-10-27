@@ -220,7 +220,7 @@ class UserBGEDense(DenseBiEncoder):
                         hidden_states[:, start:stop, :].mean(dim=1)
                     )
                     # chunk_embedding = nn.functional.tanh(model.pooler.dense(chunk_embedding)).squeeze().detach().numpy()
-                    chunk_embedding = chunk_embedding.detach().squeeze().numpy()
+                    chunk_embedding = chunk_embedding.cpu().squeeze().to_list()
                     late_chunks[
                         self.tokenizer.convert_tokens_to_string(tokenized_chunk)
                     ] = chunk_embedding
