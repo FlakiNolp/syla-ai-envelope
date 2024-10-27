@@ -17,7 +17,7 @@ class Rag(BaseRag):
 
     async def send_requests_with_repeat(self, client: ClientSession, message: Message) -> dict:
         async with client.post(
-            f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text, "tok_k": 2, "top_k_img": 3}, timeout=self.timeout
+            f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text, "tok_k": 2, "top_k_img": 2}, timeout=self.timeout
         ) as response:
             if not response.ok:
                 raise
