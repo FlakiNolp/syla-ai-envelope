@@ -24,15 +24,15 @@ class Rag(BaseRag):
             return await response.json()
 
     async def generate_answer(self, message: Message, chat_id: UUID7) -> Message | None:
-        try:
             async with ClientSession() as client:
                 i = 0
                 while i < self.retry_attempts:
+                    try:
                         i += 1
                         response_json = await self.send_requests_with_repeat(client, message)
                         return Message(
                             chat_id=chat_id, text=response_json["answer"], documents=response_json["pics"], author=Author.ai
                         )
+                    except Exception as e:
+                        return None
                 return None
-        except Exception as e:
-            return None
