@@ -1,4 +1,3 @@
-import logging
 from functools import lru_cache
 
 from joserfc.rfc7518.rsa_key import RSAKey
@@ -112,7 +111,6 @@ def init_container():
     container.register(
         BaseUnitOfWork,
         factory=init_sqlalchemy_unit_of_work,
-        scope=Scope.singleton,
     )
 
     def init_mongodb():
@@ -122,13 +120,13 @@ def init_container():
         )
         return MongoDBMessagesRepository(mongodb_client=async_client, db_name="envelope")
 
-    container.register(BaseMessagesRepository, factory=init_mongodb, scope=Scope.singleton)
+    container.register(BaseMessagesRepository, factory=init_mongodb)
 
     def init_rag_integration():
         config: ConfigSettings = container.resolve(ConfigSettings)
         return Rag(host=config.rag_host, port=config.rag_port)
 
-    container.register(BaseRag, factory=init_rag_integration, scope=Scope.singleton)
+    container.register(BaseRag, factory=init_rag_integration)
 
     container.register(Mediator, factory=init_mediator)
 
