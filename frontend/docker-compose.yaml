@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    networks:
+      - frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
+  nodejs:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile
+    container_name: nodejs
+    environment:
+      - NODE_ENV=production
+    networks:
+      - frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+networks:
+  frontend:
+    driver: bridge
