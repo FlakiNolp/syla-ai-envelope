@@ -74,6 +74,7 @@ services:
       DB_DATABASE: envelope
     volumes:
       - ./auth/src/:/src/
+      - ./private_key.pem:/etc/ssl/private_key.pem:ro
     networks:
       backend:
     depends_on:
@@ -105,6 +106,7 @@ services:
       EMAIL_PORT: 587
     volumes:
       - ./app/src/:/src/
+      - ./public_key.pem:/etc/ssl/public_key.pem:ro
     networks:
       backend:
     depends_on:
@@ -125,15 +127,15 @@ services:
     networks:
       backend:
 
-  rag-retriever:
-    build:
-      context: .
-      dockerfile: dockerfiles/rag.retriever.Dockerfile
-    container_name: rag-retriever-envelope
-    volumes:
-      - ~/.cache/huggingface:/home/user/.cache/huggingface
-    networks:
-      backend:
+#  rag-retriever:
+#    build:
+#      context: .
+#      dockerfile: dockerfiles/rag.retriever.Dockerfile
+#    container_name: rag-retriever-envelope
+#    volumes:
+#      - ~/.cache/huggingface:/home/user/.cache/huggingface
+#    networks:
+#      backend:
 
 volumes:
   postgres-data:

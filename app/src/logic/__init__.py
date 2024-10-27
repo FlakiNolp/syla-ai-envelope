@@ -39,7 +39,7 @@ def init_container():
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
 
-    with open("logic/secrets/private_key.pem", "rb") as f:
+    with open("/etc/ssl/public_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
     config: ConfigSettings = container.resolve(ConfigSettings)
