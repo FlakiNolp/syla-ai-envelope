@@ -218,7 +218,7 @@ class RetrievingService:
         ]
         image_results = [
             ImageRetrieveResult(score=score, b64_image=img, caption=caption)
-            for score, img, caption in image_results
+            for score, (img, caption) in image_results
         ]
         return RetrieveResult(text_results=text_results, image_results=image_results)
 
