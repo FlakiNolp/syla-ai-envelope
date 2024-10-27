@@ -69,7 +69,10 @@ class BGEReranker(CrossEncoder):
                 [(query, passage)], normalize=True
             )[0]
             scored_results.append((rerank_score, result))
-        scored_results = sorted(scored_results, key=lambda x: x[0], reverse=True)[
-            :top_k
-        ]
+
+        scored_results = sorted(scored_results, key=lambda x: x[0], reverse=True)
+
+        if top_k < len(scored_results):
+            scored_results = scored_results[:top_k]
+
         return scored_results

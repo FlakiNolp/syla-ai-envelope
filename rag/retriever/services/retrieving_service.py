@@ -184,15 +184,15 @@ class RetrievingService:
                 indices=sparse_query[0][0], values=sparse_query[0][1]
             ),
             using="text",
-            limit=top_k * 3,
+            limit=top_k * 2,
         )
 
         # Combine result
-        text_chunks = []
+        text_chunks = set()
         for dense_result in dense_results:
-            text_chunks.append(dense_result.payload["text"])
+            text_chunks.add(dense_result.payload["text"])
         for sparse_result in sparse_results.points:
-            text_chunks.append(sparse_result.payload["text"])
+            text_chunks.add(sparse_result.payload["text"])
 
         # Rerank text passages
         ranked_results = self.reranker.rerank(query, text_chunks, top_k)
@@ -201,14 +201,16 @@ class RetrievingService:
         image_results = self.client.search(
             collection_name=self.image_collection_name,
             query_vector=dense_query,
-            limit=int(top_img_k * 3),
+            limit=int(top_img_k * 1.5),
         )
 
         # Preprocess and rerank
-        image_search_results = [
-            (image_result.payload["img"], image_result.payload["caption"])
-            for image_result in image_results
-        ]
+        image_search_results = set(
+            [
+                (image_result.payload["img"], image_result.payload["caption"])
+                for image_result in image_results
+            ]
+        )
 
         image_results = self.reranker.rerank(query, image_search_results, top_img_k)
         # Create results
