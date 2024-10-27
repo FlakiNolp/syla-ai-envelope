@@ -175,7 +175,7 @@ class RetrievingService:
         dense_results = self.client.search(
             collection_name=self.dense_collection_name,
             query_vector=dense_query,
-            limit=top_k * 3,
+            limit=top_k * 2,
         )
 
         sparse_results = self.client.query_points(
@@ -184,7 +184,7 @@ class RetrievingService:
                 indices=sparse_query[0][0], values=sparse_query[0][1]
             ),
             using="text",
-            limit=top_k * 3,
+            limit=top_k * 2,
         )
 
         # Combine result
@@ -201,7 +201,7 @@ class RetrievingService:
         image_results = self.client.search(
             collection_name=self.image_collection_name,
             query_vector=dense_query,
-            limit=int(top_img_k * 2),
+            limit=int(top_img_k * 1.5),
         )
 
         # Preprocess and rerank
