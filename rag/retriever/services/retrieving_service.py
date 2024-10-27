@@ -134,7 +134,7 @@ class RetrievingService:
 
         # Get caption data
         caption_data_path = settings.base_dir_path / "data" / "New document 4.json"
-        data = json.load(open(caption_data_path, "r"))
+        data = json.load(open(caption_data_path, "r", encoding="utf-8"))
 
         # And upload
         base_image_dir_path = settings.base_dir_path / "data" / "images_word"
