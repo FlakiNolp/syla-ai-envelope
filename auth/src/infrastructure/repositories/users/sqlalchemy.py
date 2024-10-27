@@ -12,6 +12,9 @@ from infrastructure.repositories.users.converters import UserConverter
 
 
 class SQLAlchemyUserRepository(BaseUserRepository, BaseSQLAlchemyRepository):
+    """
+    SQLAlchemy реализация репозитория пользователей
+    """
     async def get_by_id(self, user_id: UUID7) -> User | None:
         user = (
             await self._async_transaction.scalars(select(SQLAlchemyUser).filter(SQLAlchemyUser.id == user_id))

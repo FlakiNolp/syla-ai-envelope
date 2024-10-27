@@ -4,6 +4,9 @@ from infrastructure.repositories.users.base import BaseUserRepository
 
 
 class BaseUnitOfWork(ABC):
+    """
+    Базовый класс UOW, который предоставляет интерфейс для работы с ним
+    """
     users: BaseUserRepository
 
     @abstractmethod

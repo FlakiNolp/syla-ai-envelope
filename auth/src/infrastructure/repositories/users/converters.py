@@ -5,6 +5,9 @@ from domain.values.password import HashedPassword, Password
 
 
 class UserConverter:
+    """
+    Класс конверта тор для сущности пользователя и его модели SQLAlchemy
+    """
     @classmethod
     def convert_from_sqlalchemy_to_entity(cls, model: User) -> DomainUser:
         return DomainUser(id=model.id, email=Email(model.email), password=HashedPassword(model.password))

@@ -4,14 +4,12 @@ import hashlib
 from domain.values.email import Email
 from domain.values.id import UUID7
 from infrastructure.jwt.base import BaseJWT, TokenType
-from infrastructure.repositories.users.base import BaseUserRepository
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
 from logic.commands.base import BaseCommand, CommandHandler
 from domain.entities.pair_tokens import PairTokens
 from domain.entities.access_token import AccessToken
 
-# from domain.entities.encoded_token import EncodedToken
 from domain.entities.refresh_token import RefreshToken
 from logic.exceptions.users import UserAuthenticateException, RefreshAuthenticateException
 from domain.values.jwt_header import JWTHeader
@@ -21,12 +19,18 @@ from domain.entities.jwt_payload import JWTPayload, Sub
 
 @dataclass(frozen=True)
 class AuthenticateUserCommand(BaseCommand):
+    """
+    Команда для запуска аутентификации пользователя
+    """
     email: str
     password: str
 
 
 @dataclass(frozen=True)
 class AuthenticateUserCommandHandler(CommandHandler[AuthenticateUserCommand, PairTokens]):
+    """
+    Обработчик команды для запуска аутентификации пользователя
+    """
     uow: BaseUnitOfWork
     jwt_factory: BaseJWT
 
@@ -50,11 +54,17 @@ class AuthenticateUserCommandHandler(CommandHandler[AuthenticateUserCommand, Pai
 
 @dataclass(frozen=True)
 class RefreshAuthenticateUserCommand(BaseCommand):
+    """
+    Команда для обновления access_token по refresh_token
+    """
     refresh_token: str
 
 
 @dataclass(frozen=True)
 class RefreshAuthenticateUserCommandHandler(CommandHandler[RefreshAuthenticateUserCommand, str]):
+    """
+    Обработчик команды для обновления access_token по refresh_token
+    """
     uow: BaseUnitOfWork
     jwt_factory: BaseJWT
 

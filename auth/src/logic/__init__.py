@@ -1,3 +1,6 @@
+"""
+В этом модуле инициализируются интеграции по их интерфейсам
+"""
 import logging
 from functools import lru_cache
 
@@ -22,15 +25,24 @@ from logic.mediator.base import Mediator
 
 @lru_cache(1)
 def _init_container():
+    """
+    Добавлено для кеширования проинициализированного контейнера
+    :return:
+    """
     return init_container()
 
 
 @lru_cache(None)
 def init_container():
+    """
+    Главный элементом всех зависимостей является container, который накапливает их в себе
+    :return:
+    """
     container = Container()
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
 
+    # В этом месте мы читаем приватный ключ для JWT, который пробрасывается в docker compose через volumes
     with open("/etc/ssl/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 

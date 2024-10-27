@@ -15,12 +15,15 @@ from infrastructure.jwt.base import TokenType
 
 
 class RSAJWT[T: PairTokens | AccessToken | RefreshToken, TK: RSAKey](BaseJWT):
+    """
+    Реализация базового класса
+    """
     def __init__(
         self,
         key: TK,
         registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
-        access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
-        refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
+        access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1), # Срок истекания access_token
+        refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30), # Срок истекания refresh_token
     ):
         self.key = key
         self.registry = registry
