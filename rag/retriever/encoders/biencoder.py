@@ -70,9 +70,7 @@ class UserBGESparse(SparseBiEncoder):
     def warmup(self):
         raise NotImplementedError
 
-    def encode(
-        self, texts: str | list[str]
-    ) -> list[tuple[list[int], list[float]]]:
+    def encode(self, texts: str | list[str]) -> list[tuple[list[int], list[float]]]:
         """
         Encodes text(s) into sparse vectors using the specified vocabulary.
 
@@ -260,7 +258,9 @@ class JinaV3Dense:
         Initializes the UserBGEDense bi-encoder model for dense vector representation.
         Loads the model and tokenizer from a pre-trained Hugging Face model.
         """
-        self.model = AutoModel.from_pretrained(settings.jina_retriever.name)
+        self.model = AutoModel.from_pretrained(
+            settings.jina_retriever.name, trust_remote_code=True
+        )
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
@@ -307,9 +307,11 @@ class JinaV3Dense:
                         mode="words",
                     )[0]
 
-                    embeddings = self.model.encode(
-                        child_chunk, task="retrieval.passage"
-                    ).cpu().tolist()
+                    embeddings = (
+                        self.model.encode(child_chunk, task="retrieval.passage")
+                        .cpu()
+                        .tolist()
+                    )
 
                     chunks[parent_chunk].append(embeddings)
             texts_embeddings.append(chunks)
