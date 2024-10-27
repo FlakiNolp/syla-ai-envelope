@@ -32,7 +32,7 @@ class ReceivedMessageHandler(CommandHandler[ReceivedMessage, Message]):
         message = Message(chat_id=UUID7(command.chat_id), text=command.text, author=Author.user)
         await self.messages.add_message(message, chat_id=command.chat_id)
         answer = await self.rag.generate_answer(message=message, chat_id=UUID7(command.chat_id))
-        if not answer:
+        if answer is None:
             raise AnswerGenerationException(command.text)
         await self.messages.add_message(message=answer, chat_id=command.chat_id)
         return answer
