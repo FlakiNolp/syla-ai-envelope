@@ -69,6 +69,5 @@ async def refresh(
     except ApplicationException as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail={"error": e.message})
     except Exception as e:
-        raise e
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": str(e)})
     return RefreshAuthenticateUserResponseSchema.from_entity(access_token)
