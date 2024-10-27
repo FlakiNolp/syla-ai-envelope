@@ -8,4 +8,4 @@ router = APIRouter(prefix="/qa")
 
 @router.post("/answer", response_model=QAResponse)
 async def answer_endpoint(qa_request: QARequest):
-    return await generate_answer(qa_request.query, is_envelope=True)
+    return await generate_answer(qa_request, is_envelope=True)
