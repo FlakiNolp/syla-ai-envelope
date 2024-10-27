@@ -1,0 +1,49 @@
+.Message {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  color: var(--font-color);
+  margin-bottom: 20px;
+  font-size: var(--font-size-m);
+  @media screen and (max-width: 768px) {
+    font-size: var(--font-size-sm);
+  }
+}
+
+.content {
+  padding: 30px;
+  border-radius: var(--border-radius);
+  white-space: pre-wrap;
+  overflow-y: hidden;
+  overflow-wrap: break-word !important;
+}
+
+.ai {
+  .content {
+    background-color: var(--message-color);
+    @media screen and (max-width: 768px) {
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+  }
+}
+
+.user {
+  flex-direction: row-reverse;
+
+  .content {
+    background: linear-gradient(214deg, var(--primary-color) 0%, var(--tertiary-color) 100%);
+
+    @media screen and (max-width: 768px) {
+      border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+  }
+}
+
+.isExample {
+  width: 100%;
+}
+.markdown{
+
+  max-width: 100%;
+  white-space : pre-wrap !important;
+}

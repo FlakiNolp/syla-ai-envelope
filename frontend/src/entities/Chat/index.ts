@@ -1,0 +1,1 @@
+export type {IRole} from "./model/types/ChatSchema";

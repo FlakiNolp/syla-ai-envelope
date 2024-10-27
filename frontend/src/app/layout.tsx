@@ -2,7 +2,11 @@ import type {Metadata} from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import {Instrument_Sans} from "next/font/google";
-import { AntdRegistry } from '@ant-design/nextjs-registry';
+import {AntdRegistry} from '@ant-design/nextjs-registry';
+import {ConfigProvider} from "antd";
+import {themeAnt} from "@/shared/config/theme";
+
+import {StoreProvider} from "@/shared/providers/store/Provider";
 
 export const metadata: Metadata = {
     title: "Envelope Chat",
@@ -27,11 +31,15 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body
-                className={`${saarFont.variable} ${instrumentSansFont.variable} bg-gray-800 text-white font-instrumentSans`}
-            >
-                <AntdRegistry>{children}</AntdRegistry>
-            </body>
+        <body
+            className={`${saarFont.variable} ${instrumentSansFont.variable}`}
+        >
+        <AntdRegistry>
+            <ConfigProvider theme={themeAnt}>
+                <StoreProvider>{children}</StoreProvider>
+            </ConfigProvider>
+        </AntdRegistry>
+        </body>
         </html>
     );
 }

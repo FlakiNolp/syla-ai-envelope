@@ -3,6 +3,8 @@ import PrivateRoute from "@/shared/providers/PrivateRoute/PrivateRoute";
 
 export default function Home() {
     return (
-        <div></div>
+        <PrivateRoute>
+            <MainPage/>
+        </PrivateRoute>
     );
 }

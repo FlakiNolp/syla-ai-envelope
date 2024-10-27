@@ -7,7 +7,7 @@
     --bg-color: #181818;
     --primary-color: #008000;
     --secondary-color: #202020;
-    --tertiary-color: #8D0088;
+    --tertiary-color: #FF00C7;
     --quaternary-color: #E63D43;
     --sidebar-color: #131313;
     --message-color: #292929;

@@ -1,0 +1,8 @@
+{
+    "schemaFile": "http://31.129.50.189:8000/openapi.json",
+    "apiFile": "./src/shared/providers/store/test.ts",
+    "apiImport": "emptySplitApi",
+    "outputFile": "./src/shared/providers/store/Chat.ts",
+    "exportName": "chatApi",
+    "hooks": true
+}
