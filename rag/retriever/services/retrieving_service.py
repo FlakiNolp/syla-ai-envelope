@@ -41,9 +41,9 @@ class RetrievingService:
         collections = self.client.get_collections()
         LOGGER.info(f"Collections: {collections}")
         if (
-            self.sparse_collection_name in collections
-            and self.dense_collection_name in collections
-            and self.image_collection_name in collections
+            self.sparse_collection_name in collections.collections
+            and self.dense_collection_name in collections.collections
+            and self.image_collection_name in collections.collections
         ):
             LOGGER.info(f"Collections exists: {collections}")
             return
@@ -179,9 +179,7 @@ class RetrievingService:
 
         sparse_results = self.client.query_points(
             collection_name="test_collection_sparse",
-            query=models.SparseVector(
-                indices=sparse_query[0][0], values=sparse_query[0][1]
-            ),
+            query=models.SparseVector(indices=sparse_query[0], values=sparse_query[1]),
             using="text",
             limit=top_k * 2,
         )
