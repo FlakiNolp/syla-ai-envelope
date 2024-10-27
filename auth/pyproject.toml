@@ -24,6 +24,8 @@ dependencies = [
     "python-multipart",
     "aiosmtplib",
     "joserfc",
+    "uvicorn",
+    "pydantic-settings",
     "setuptools >= 61.0"
 ]
 
