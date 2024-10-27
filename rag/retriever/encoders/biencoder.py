@@ -164,7 +164,7 @@ class UserBGEDense(DenseBiEncoder):
     def create_late_chunks(
         self,
         texts: list[str] | str,
-        model_len: int = 8000,
+        model_len: int = 4000,
         chunk_len: int = 512,
         overlap: int = 150,
     ) -> list[dict[str, np.ndarray]]:
