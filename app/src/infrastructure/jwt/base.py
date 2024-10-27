@@ -10,12 +10,12 @@ from domain.entities.registration_token import RegistrationToken
 
 
 class TokenType(enum.Enum):
-    access_token = 'access_token'
-    refresh_token = 'refresh_token'
-    registration_token = 'registration_token'
+    access_token = "access_token"
+    refresh_token = "refresh_token"
+    registration_token = "registration_token"
 
 
-class BaseJWT[T: AccessToken | RegistrationToken,TK: RSAKey](abc.ABC):
+class BaseJWT[T: AccessToken | RegistrationToken, TK: RSAKey](abc.ABC):
     @abc.abstractmethod
     def encode(self, token: T) -> str | tuple[str, str]: ...
     @abc.abstractmethod

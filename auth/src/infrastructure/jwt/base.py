@@ -10,11 +10,11 @@ from domain.entities.refresh_token import RefreshToken
 
 
 class TokenType(enum.Enum):
-    access_token = 'access_token'
-    refresh_token = 'refresh_token'
+    access_token = "access_token"
+    refresh_token = "refresh_token"
 
 
-class BaseJWT[T: PairTokens | AccessToken | RefreshToken,TK: RSAKey](abc.ABC):
+class BaseJWT[T: PairTokens | AccessToken | RefreshToken, TK: RSAKey](abc.ABC):
     @abc.abstractmethod
     def encode(self, token: T) -> str | tuple[str, str]: ...
 

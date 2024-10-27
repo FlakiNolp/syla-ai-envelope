@@ -56,10 +56,17 @@ class RegistrateUserCommandHandler(CommandHandler[RegistrateUserCommand, None]):
     jwt_service: BaseJWT
 
     async def handle(self, command: RegistrateUserCommand):
-        token = self.jwt_service.encode(RegistrationToken(JWTHeader(Alg("RS256")),
-                                                          JWTPayload(sub={"email": command.email,
-                                                                          "hashed_password": Password(command.password)
-                                                                     .hash_password().as_generic_type()})))
+        token = self.jwt_service.encode(
+            RegistrationToken(
+                JWTHeader(Alg("RS256")),
+                JWTPayload(
+                    sub={
+                        "email": command.email,
+                        "hashed_password": Password(command.password).hash_password().as_generic_type(),
+                    }
+                ),
+            )
+        )
         await self.email_service.send_registration_mail(receiver_email=Email(command.email), registration_token=token)
 
 
@@ -75,10 +82,13 @@ class ValidateRegistrationCommandHandler(CommandHandler[ValidateRegistrationComm
 
     @SQLAlchemyUnitOfWork.provide_async_uow
     async def handle(self, command: ValidateRegistrationCommand) -> User:
-        registration_token: RegistrationToken = self.jwt_service.verify(token=command.token,
-                                                                        _type=TokenType.registration_token)
-        new_user = User.create_user(Email(registration_token.payload.sub['email']),
-                                    HashedPassword(registration_token.payload.sub['hashed_password']))
+        registration_token: RegistrationToken = self.jwt_service.verify(
+            token=command.token, _type=TokenType.registration_token
+        )
+        new_user = User.create_user(
+            Email(registration_token.payload.sub["email"]),
+            HashedPassword(registration_token.payload.sub["hashed_password"]),
+        )
         await self.uow.users.add(new_user)
         await self.uow.commit()
         return new_user

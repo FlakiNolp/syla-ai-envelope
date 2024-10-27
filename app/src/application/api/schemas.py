@@ -11,7 +11,9 @@ from logic.commands.users import AuthorizeUser
 from logic.mediator.base import Mediator
 
 
-async def auth_user(token: Annotated[str, Header(alias="Authorization")], container: Container = Depends(_init_container)) -> AccessToken:
+async def auth_user(
+    token: Annotated[str, Header(alias="Authorization")], container: Container = Depends(_init_container)
+) -> AccessToken:
     try:
         mediator: Mediator = container.resolve(Mediator)
         return (await mediator.handle_command(AuthorizeUser(token.split()[-1])))[0]

@@ -11,6 +11,7 @@ class UserEmailExistsException(LogicException):
     def message(self):
         return f"Пользователь с почтой <{self.text}> уже существует"
 
+
 @dataclass(frozen=True, eq=False)
 class UserAuthenticateException(LogicException):
     @property

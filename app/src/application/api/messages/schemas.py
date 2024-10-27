@@ -34,5 +34,3 @@ class GetHistoryResponseSchema(BaseModel):
     @classmethod
     def from_entity(cls, messages: list[Message]) -> "GetHistoryResponseSchema":
         return cls(messages=[JSONMessage.from_entity(message) for message in messages])
-
-
