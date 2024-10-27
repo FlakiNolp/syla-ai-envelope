@@ -183,7 +183,9 @@ class RetrievingService:
 
         sparse_results = self.client.query_points(
             collection_name="test_collection_sparse",
-            query=models.SparseVector(indices=sparse_query[0], values=sparse_query[1]),
+            query=models.SparseVector(
+                indices=sparse_query[0][0], values=sparse_query[0][1]
+            ),
             using="text",
             limit=top_k * 2,
         )
