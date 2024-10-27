@@ -16,7 +16,6 @@ class BaseMongoDBRepository:
     def provide_async_session(func):
         async def wrapper(self, *args, **kwargs):
             async with await self.mongo_db_client.start_session() as async_session:
-                print(type(async_session), async_session.has_ended)
                 async_session: AgnosticClientSession
                 return await func(self, *args, **kwargs, async_session=async_session)
 

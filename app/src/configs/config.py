@@ -34,3 +34,7 @@ class ConfigSettings(BaseSettings):
     rag_port: int = Field(
         8100, alias="RAG_PORT"
     )
+    email: str = Field(alias="EMAIL")
+    email_password: str = Field(alias="EMAIL_PASSWORD")
+    email_host: str = Field("smtp.gmail.com", alias="EMAIL_HOST")
+    email_port: int = Field(587, alias="EMAIL_PORT")

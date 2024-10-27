@@ -25,6 +25,20 @@ services:
     networks:
       backend:
 
+#  migrate:
+#    build:
+#      context: .
+#      dockerfile: dockerfiles/migration.Dockerfile
+#    environment:
+#      DB_HOST: localhost
+#      DB_PORT: 5432
+#      DB_USERNAME: postgres
+#      DB_PASSWORD: postgres
+#      DB_DATABASE: envelope
+#    volumes:
+#      - ./migration:/src
+#    command: [ "alembic", "upgrade", "head" ]  # Команда для выполнения миграций
+
   mongodb:
     container_name: mongodb-envelope
     image: mongo:latest
@@ -52,14 +66,15 @@ services:
     ports:
       - "8001:8000"
     command: "uvicorn --factory application.api.main:create_app --reload --host 0.0.0.0 --port 8000"
-    env_file:
-      - auth/src/.env
     environment:
       DB_HOST: postgres_db
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: envelope
+    volumes:
+      - ./auth/src/:/src/
+      - ./private_key.pem:/etc/ssl/private_key.pem:ro
     networks:
       backend:
     depends_on:
@@ -74,8 +89,6 @@ services:
     ports:
       - "8000:8000"
     command: "uvicorn --factory application.api.main:create_app --reload --host 0.0.0.0 --port 8000"
-    env_file:
-      - app/src/.env
     environment:
       DB_HOST: postgres_db
       DB_PORT: 5432
@@ -87,8 +100,13 @@ services:
       MONGODB_PORT: 27017
       RAG_HOST: rag-chat
       RAG_PORT: 8000
+      EMAIL: check.telegram.bot@gmail.com
+      EMAIL_PASSWORD: "${EMAIL_PASSWORD}"
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
     volumes:
       - ./app/src/:/src/
+      - ./public_key.pem:/etc/ssl/public_key.pem:ro
     networks:
       backend:
     depends_on:
@@ -109,15 +127,15 @@ services:
     networks:
       backend:
 
-  rag-retriever:
-    build:
-      context: ./rag/retriever
-      dockerfile: dockerfiles/rag.retriever.Dockerfile
-    container_name: rag-retriever-envelope
-    volumes:
-      - ~/.cache/huggingface:/home/user/.cache/huggingface
-    networks:
-      backend:
+#  rag-retriever:
+#    build:
+#      context: .
+#      dockerfile: dockerfiles/rag.retriever.Dockerfile
+#    container_name: rag-retriever-envelope
+#    volumes:
+#      - ~/.cache/huggingface:/home/user/.cache/huggingface
+#    networks:
+#      backend:
 
 volumes:
   postgres-data:
