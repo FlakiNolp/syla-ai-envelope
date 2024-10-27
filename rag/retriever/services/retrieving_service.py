@@ -3,6 +3,7 @@ from retriever.utils import LOGGER
 import uuid
 import json
 import base64
+import time
 from retriever.config import settings
 from retriever.encoders import UserBGEDense, UserBGESparse, BGEReranker
 from retriever.schemas import RetrieveResult, TextRetrieveResult, ImageRetrieveResult
@@ -50,7 +51,8 @@ class RetrievingService:
         else:
             LOGGER.info(f"Collections not found, deleting: {collections}")
             for collection in collections:
-                self.client.delete_collection(collection_name=collection)
+                self.client.delete_collection(collection_name=collection[0])
+                time.sleep(5)
             self._create_and_fill_collections()
             return
 
