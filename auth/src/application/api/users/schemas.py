@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Header, Cookie
+from fastapi import Header, Body
 from pydantic import BaseModel
 
 from domain.entities.pair_tokens import PairTokens
@@ -16,7 +16,7 @@ class AuthenticateUserResponseSchema(BaseModel):
         return cls(access_token=pair_tokens.access_token, refresh_token=pair_tokens.refresh_token, token_type="Bearer")
 
 
-RefreshAuthorizationUserRequestSchema = Annotated[str, Cookie(..., name="refresh_token")]
+RefreshAuthorizationUserRequestSchema = Annotated[str, Body(..., name="refresh_token")]
 
 AccessAuthorizationUserReqeustSchema = Annotated[str, Header(..., name="Authorization")]
 
