@@ -50,7 +50,10 @@ class UserBGESparse(SparseBiEncoder):
         Loads model weights from a pre-trained state and prepares the sorted vocabulary.
         """
         self.model = BGEM3FlagModel(
-            settings.sparse_retriever.name, use_fp16=True, normalize_embeddings=True
+            settings.sparse_retriever.name,
+            use_fp16=True,
+            normalize_embeddings=True,
+            device="cuda" if torch.cuda.is_available() else "cpu",
         )
         self.model.model.sparse_linear.load_state_dict(
             torch.load(settings.base_dir_path / "encoders" / "sparse_linear.pt")
@@ -148,7 +151,7 @@ class UserBGEDense(DenseBiEncoder):
         """
         self.model = AutoModel.from_pretrained(settings.dense_retriever.name)
         self.tokenizer = AutoTokenizer.from_pretrained(settings.dense_retriever.name)
-
+        self.model.to("cuda" if torch.cuda.is_available() else "cpu")
         self.model.eval()
 
     # TODO: add warmup and torch compile

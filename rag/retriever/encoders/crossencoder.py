@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+
+import torch
 from FlagEmbedding import FlagReranker
 from retriever.config import settings
 
@@ -19,7 +21,11 @@ class BGEReranker(CrossEncoder):
         The reranker model is loaded in evaluation mode and configured to use
         16-bit floating-point precision for improved efficiency.
         """
-        self.reranker = FlagReranker(settings.reranker.name, use_fp16=True)
+        self.reranker = FlagReranker(
+            settings.reranker.name,
+            use_fp16=True,
+            device="cuda" if torch.cuda.is_available() else "cpu",
+        )
         self.reranker.model.eval()
 
     def warmup(self):

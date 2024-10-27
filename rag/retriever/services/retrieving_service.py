@@ -52,7 +52,6 @@ class RetrievingService:
             LOGGER.info(f"Collections not found, deleting: {collections}")
             for collection in collections.collections:
                 self.client.delete_collection(collection_name=collection.name)
-
             time.sleep(10)
             self._create_and_fill_collections()
             return
