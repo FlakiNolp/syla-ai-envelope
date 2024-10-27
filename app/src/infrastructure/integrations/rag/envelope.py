@@ -20,7 +20,7 @@ class Rag(BaseRag):
             f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text, "tok_k": 2, "top_k_img": 3}, timeout=self.timeout
         ) as response:
             if not response.ok:
-                raise response.raise_for_status()
+                raise
             return await response.json()
 
     async def generate_answer(self, message: Message, chat_id: UUID7) -> Message | None:
