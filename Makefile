@@ -13,4 +13,4 @@ stop:
 	docker compose stop
 
 envs:
-	source ~/.profile
+	source .profile
