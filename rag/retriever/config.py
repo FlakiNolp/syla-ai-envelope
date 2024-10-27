@@ -15,6 +15,10 @@ class DenseRetrieverConfig(BaseSettings):
     name: str = Field(alias="DENSE_RETRIEVER_NAME", default="deepvk/USER-bge-m3")
 
 
+class JinaRetrieverConfig(BaseSettings):
+    name: str = Field(alias="JINA_RETRIEVER_NAME", default="jinaai/jina-embeddings-v3")
+
+
 class SparseRetrieverConfig(BaseSettings):
     name: str = Field(alias="SPARSE_RETRIEVER_NAME", default="deepvk/USER-bge-m3")
 
@@ -28,6 +32,7 @@ class Config(BaseSettings):
     dense_retriever: DenseRetrieverConfig = DenseRetrieverConfig()
     sparse_retriever: SparseRetrieverConfig = SparseRetrieverConfig()
     reranker: RerankerConfig = RerankerConfig()
+    jina_retriever: JinaRetrieverConfig = JinaRetrieverConfig()
     base_dir_path: Path = Path(__file__).parent
 
 
