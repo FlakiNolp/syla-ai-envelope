@@ -33,11 +33,11 @@ export const MessageWidget = ({className, messageIsLoading}: MessageWidgetProps)
     }
 
 
-    const currentChat: { text: string, author: IRole }[] = data?.messages.map((item) => {
-        return { text: item.text, author: item.author }
+    const currentChat: { text: string, author: IRole, pics: string[] }[] = data?.messages.map((item) => {
+        return { text: item.text, author: item.author, pics: item.pics }
     })
     const messages = useMemo(() => currentChat?.map((item) => {
-        return {content: item.text, sender: item.author}
+        return {content: item.text, sender: item.author, pics: item.pics}
     }), [currentChat])
     useEffect(() => {
         chatRef.current?.scrollTo({ top: chatRef.current.scrollHeight, behavior: "smooth" })
@@ -51,7 +51,7 @@ export const MessageWidget = ({className, messageIsLoading}: MessageWidgetProps)
                         ? (<>
 
                             {messages?.map((item) => <Message className={"message"} key={Math.random()}
-                                                              sender={item.sender} content={item.content}/>)}
+                                                              sender={item.sender} pics={item.pics} content={item.content}/>)}
                             {messageIsLoading && <Skeleton avatar paragraph={{ rows: 3 }} active />}
                         </>)
                         : (

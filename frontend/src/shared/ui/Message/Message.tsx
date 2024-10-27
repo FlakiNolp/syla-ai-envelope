@@ -16,6 +16,7 @@ interface MessageProps {
     sender?: IRole
     content?: string
     isExample?: boolean
+    pics?: string[]
 }
 
 export const Message = (props: MessageProps) => {
@@ -30,16 +31,18 @@ export const Message = (props: MessageProps) => {
         className,
         sender,
         content,
-        isExample = false
+        isExample = false,
+        pics
     } = props
 
     return (
         <div className={classNames(cls.Message, {}, [className, cls[sender || "user"]])}>
             <Avatar theme={sender}/>
             <div className={classNames(cls.content, {[cls.isExample]: isExample})}>
-                {isExample ? <TypeAnimation cursor={false} sequence={[content as string]}/> :
-                    <Markdown className={cls.markdown}>{content}</Markdown>}
-
+                {isExample ? <TypeAnimation cursor={false} sequence={[content as string]} /> :
+                    <Markdown className={cls.markdown}>{content}</Markdown>
+                }
+                {pics?.map((item, index) => <img key={index} src={item} alt="image"/>)}
             </div>
         </div>
     )
