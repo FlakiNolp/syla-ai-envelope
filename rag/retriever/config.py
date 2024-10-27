@@ -20,7 +20,7 @@ class SparseRetrieverConfig(BaseSettings):
 
 
 class RerankerConfig(BaseSettings):
-    name: str = Field(alias="RERANKER_NAME", default="BAAI/bge-reranker-v2-gemma")
+    name: str = Field(alias="RERANKER_NAME", default="BAAI/bge-reranker-v2-m3")
 
 
 class Config(BaseSettings):
