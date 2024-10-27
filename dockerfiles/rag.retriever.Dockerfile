@@ -10,7 +10,7 @@ ENV POETRY_NO_INTERACTION=1 \
 # Install curl and create a user
 RUN apt-get update && apt-get install -y curl && \
     groupadd -r user && useradd -r -g user user && \
-    curl -sSL https://install.python-poetry.org | python3 -
+    pip3 install poetry
 
 # Create necessary directories and set permissions
 RUN mkdir -p /home/user/.cache/huggingface && \
