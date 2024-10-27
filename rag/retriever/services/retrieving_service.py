@@ -39,18 +39,19 @@ class RetrievingService:
         all existing collections and calls `_create_and_fill_collections` to create and populate them.
         """
         collections = self.client.get_collections()
-        LOGGER.info(f"Collections: {collections}")
+        collections_names = [c.name for c in collections.collections]
+        LOGGER.info(f"Collections: {collections_names}")
         if (
-            self.sparse_collection_name in collections.collections
-            and self.dense_collection_name in collections.collections
-            and self.image_collection_name in collections.collections
+            self.sparse_collection_name in collections_names
+            and self.dense_collection_name in collections_names
+            and self.image_collection_name in collections_names
         ):
             LOGGER.info(f"Collections exists: {collections}")
             return
         else:
             LOGGER.info(f"Collections not found, deleting: {collections}")
-            for collection in collections.collections:
-                self.client.delete_collection(collection_name=collection.name)
+            for name in collections_names:
+                self.client.delete_collection(collection_name=name)
             self._create_and_fill_collections()
             return
 
