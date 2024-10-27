@@ -191,7 +191,8 @@ class RetrievingService:
         text_chunks = []
         for dense_result in dense_results:
             text_chunks.append(dense_result.payload["text"])
-        for sparse_result in sparse_results:
+        for sparse_result in sparse_results.points:
+            print(sparse_result.payload["text"])
             text_chunks.append(sparse_result.payload["text"])
 
         # Rerank text passages
