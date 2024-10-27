@@ -1,0 +1,480 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class node2 as "abc.ABC" {
+   __slots__: 
+}
+class node6 as "abc.ABCMeta" {
+   __abstractmethods__: 
+   __new__(
+            mcls: type[_typeshed.Self], name: str, bases: tuple[type, ...], namespace: dict[str, Any], /, **kwargs: Any
+        ): 
+   __instancecheck__(cls: ABCMeta, instance: Any): 
+   __subclasscheck__(cls: ABCMeta, subclass: type): 
+   _dump_registry(cls: ABCMeta, file: SupportsWrite[str] | None = None): 
+   register(cls: ABCMeta, subclass: type[_T]): 
+}
+class object {
+   __doc__: 
+   __dict__: 
+   __module__: 
+   __annotations__: 
+   __class__(self): 
+   __class__(self, __type: type[object]): 
+   __init__(self): 
+   __new__(cls): 
+   __setattr__(self, __name: str, __value: Any): 
+   __delattr__(self, __name: str): 
+   __eq__(self, __value: object): 
+   __ne__(self, __value: object): 
+   __str__(self): 
+   __repr__(self): 
+   __hash__(self): 
+   __format__(self, __format_spec: str): 
+   __getattribute__(self, __name: str): 
+   __sizeof__(self): 
+   __reduce__(self): 
+   __reduce_ex__(self, __protocol: SupportsIndex): 
+   __getstate__(self): 
+   __dir__(self): 
+   __init_subclass__(cls): 
+   __subclasshook__(cls, __subclass: type): 
+}
+class node17 as "pydantic._internal._model_construction.ModelMetaclass" {
+   __pydantic_complete__: 
+   __pydantic_post_init__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_decorators__: 
+   model_computed_fields: 
+   __pydantic_custom_init__: 
+   __pydantic_parent_namespace__: 
+   __new__(
+        mcs,
+        cls_name: str,
+        bases: tuple[type[Any], ...],
+        namespace: dict[str, Any],
+        __pydantic_generic_metadata__: PydanticGenericMetadata | None = None,
+        __pydantic_reset_parent_namespace__: bool = True,
+        _create_model_module: str | None = None,
+        **kwargs: Any,
+    ): 
+   __getattr__(self, item: str): 
+   __prepare__(cls, *args: Any, **kwargs: Any): 
+   __instancecheck__(self, instance: Any): 
+   _collect_bases_data(bases: tuple[type[Any], ...]): 
+   __fields__(self): 
+   __dir__(self): 
+}
+class node10 as "pydantic.main.BaseModel" {
+   __pydantic_parent_namespace__: 
+   model_config: 
+   model_fields: 
+   model_computed_fields: 
+   __class_vars__: 
+   __private_attributes__: 
+   __signature__: 
+   __pydantic_complete__: 
+   __pydantic_core_schema__: 
+   __pydantic_custom_init__: 
+   __pydantic_decorators__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_parent_namespace__: 
+   __pydantic_post_init__: 
+   __pydantic_root_model__: 
+   __pydantic_serializer__: 
+   __pydantic_validator__: 
+   __pydantic_extra__: 
+   __pydantic_fields_set__: 
+   __pydantic_private__: 
+   __pydantic_core_schema__: 
+   __pydantic_validator__: 
+   __pydantic_serializer__: 
+   __slots__: 
+   __pydantic_base_init__: 
+   __repr_name__: 
+   __repr_str__: 
+   __pretty__: 
+   __rich_repr__: 
+   __init__(self, /, **data: Any): 
+   model_extra(self): 
+   model_fields_set(self): 
+   model_construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   model_copy(self, *, update: dict[str, Any] | None = None, deep: bool = False): 
+   model_dump(
+        self,
+        *,
+        mode: Literal['json', 'python'] | str = 'python',
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_dump_json(
+        self,
+        *,
+        indent: int | None = None,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_json_schema(
+        cls,
+        by_alias: bool = True,
+        ref_template: str = DEFAULT_REF_TEMPLATE,
+        schema_generator: type[GenerateJsonSchema] = GenerateJsonSchema,
+        mode: JsonSchemaMode = 'validation',
+    ): 
+   model_parametrized_name(cls, params: tuple[type[Any], ...]): 
+   model_post_init(self, __context: Any): 
+   model_rebuild(
+        cls,
+        *,
+        force: bool = False,
+        raise_errors: bool = True,
+        _parent_namespace_depth: int = 2,
+        _types_namespace: dict[str, Any] | None = None,
+    ): 
+   model_validate(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        from_attributes: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_json(
+        cls,
+        json_data: str | bytes | bytearray,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_strings(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   __get_pydantic_core_schema__(cls, source: type[BaseModel], handler: GetCoreSchemaHandler, /): 
+   __get_pydantic_json_schema__(
+        cls,
+        core_schema: CoreSchema,
+        handler: GetJsonSchemaHandler,
+        /,
+    ): 
+   __pydantic_init_subclass__(cls, **kwargs: Any): 
+   __class_getitem__(
+        cls, typevar_values: type[Any] | tuple[type[Any], ...]
+    ): 
+   __copy__(self): 
+   __deepcopy__(self, memo: dict[int, Any] | None = None): 
+   __getattr__(self, item: str): 
+   __setattr__(self, name: str, value: Any): 
+   __delattr__(self, item: str): 
+   _check_frozen(self, name: str, value: Any): 
+   __getstate__(self): 
+   __setstate__(self, state: dict[Any, Any]): 
+   __eq__(self, other: Any): 
+   __init_subclass__(cls, **kwargs: Unpack[ConfigDict]): 
+   __iter__(self): 
+   __repr__(self): 
+   __repr_args__(self): 
+   __str__(self): 
+   __fields__(self): 
+   __fields_set__(self): 
+   dict(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ): 
+   json(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        encoder: Callable[[Any], Any] | None = PydanticUndefined,  # type: ignore[assignment]
+        models_as_dict: bool = PydanticUndefined,  # type: ignore[assignment]
+        **dumps_kwargs: Any,
+    ): 
+   parse_obj(cls, obj: Any): 
+   parse_raw(  # noqa: D102
+        cls,
+        b: str | bytes,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   parse_file(  # noqa: D102
+        cls,
+        path: str | Path,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   from_orm(cls, obj: Any): 
+   construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   copy(
+        self,
+        *,
+        include: AbstractSetIntStr | MappingIntStrAny | None = None,
+        exclude: AbstractSetIntStr | MappingIntStrAny | None = None,
+        update: Dict[str, Any] | None = None,  # noqa UP006
+        deep: bool = False,
+    ): 
+   schema(  # noqa: D102
+        cls, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE
+    ): 
+   schema_json(  # noqa: D102
+        cls, *, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE, **dumps_kwargs: Any
+    ): 
+   validate(cls, value: Any): 
+   update_forward_refs(cls, **localns: Any): 
+   _iter(self, *args: Any, **kwargs: Any): 
+   _copy_and_set_values(self, *args: Any, **kwargs: Any): 
+   _get_value(cls, *args: Any, **kwargs: Any): 
+   _calculate_keys(self, *args: Any, **kwargs: Any): 
+}
+class node21 as "pydantic_settings.main.BaseSettings" {
+   __pydantic_base_init__: 
+   model_config: 
+   __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+        **values: Any,
+    ): 
+   settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ): 
+   _settings_build_values(
+        self,
+        init_kwargs: dict[str, Any],
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = None,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+    ): 
+}
+class node3 as "rag.retriever.config.Config" {
+   qdrant: 
+   dense_retriever: 
+   sparse_retriever: 
+   reranker: 
+   base_dir_path: 
+}
+class node8 as "rag.retriever.config.DenseRetrieverConfig" {
+   name: 
+}
+class node7 as "rag.retriever.config.QdrantConfig" {
+   host: 
+   port: 
+}
+class node16 as "rag.retriever.config.RerankerConfig" {
+   name: 
+}
+class node4 as "rag.retriever.config.SparseRetrieverConfig" {
+   name: 
+}
+class node15 as "rag.retriever.encoders.biencoder.DenseBiEncoder" {
+   encode(self, query: str, mode: str): 
+   create_late_chunks(
+        self,
+        texts: list[str] | str,
+        model_len: int,
+        chunk_len: int,
+        overlap: int,
+    ): 
+}
+class node22 as "rag.retriever.encoders.biencoder.SparseBiEncoder" {
+   encode(self, texts: str | list[str]): 
+   encode_text_with_sparse_vectors(
+        self,
+        texts: str | list[str],
+        parent_chunk_size: int,
+        child_chunk_size: int,
+        parent_overlap: int,
+        child_overlap: int,
+    ): 
+}
+class node5 as "rag.retriever.encoders.biencoder.UserBGEDense" {
+   model: 
+   device: 
+   tokenizer: 
+   __init__(self): 
+   warmup(self): 
+   create_late_chunks(
+        self,
+        texts: list[str] | str,
+        model_len: int = 4000,
+        chunk_len: int = 512,
+        overlap: int = 150,
+    ): 
+   encode(self, query: str, mode: str): 
+}
+class node1 as "rag.retriever.encoders.biencoder.UserBGESparse" {
+   model: 
+   sorted_vocab: 
+   device: 
+   __init__(self): 
+   warmup(self): 
+   encode(
+        self, texts: str | list[str]
+    ): 
+   encode_text_with_sparse_vectors(
+        self,
+        texts: str | list[str],
+        parent_chunk_size: int = 2000,
+        child_chunk_size: int = 512,
+        parent_overlap: int = 250,
+        child_overlap: int = 100,
+    ): 
+}
+class node9 as "rag.retriever.encoders.crossencoder.BGEReranker" {
+   reranker: 
+   device: 
+   __init__(self): 
+   warmup(self): 
+   rerank(
+        self,
+        query: str,
+        search_results: list[str] | list[tuple[str, str]],
+        top_k: int = 5,
+    ): 
+}
+class node18 as "rag.retriever.encoders.crossencoder.CrossEncoder" {
+   rerank(self, query: str, points: list[str], top_k: int): 
+}
+class node0 as "rag.retriever.schemas.result.ImageRetrieveResult" {
+   score: 
+   b64_image: 
+   caption: 
+}
+class node12 as "rag.retriever.schemas.result.RetrieveResult" {
+   text_results: 
+   image_results: 
+}
+class node19 as "rag.retriever.schemas.result.TextRetrieveResult" {
+   score: 
+   passage: 
+}
+class node20 as "rag.retriever.services.retrieving_service.RetrievingService" {
+   reranker: 
+   image_collection_name: 
+   client: 
+   sparse_collection_name: 
+   dense_collection_name: 
+   user_bg_dense: 
+   user_bg_sparse: 
+   __init__(self): 
+   check_collections(self): 
+   _create_and_fill_collections(self): 
+   get_nearest_points(
+        self, query: str, top_k: int, top_img_k: int
+    ): 
+}
+class node13 as "typing.Hashable" {
+   __hash__(self): 
+}
+class node14 as "typing.Iterable" {
+   __iter__(self): 
+}
+
+node2   <-[#595959,dashed]- "isinstanceof" node6  
+node2   ^-[#595959,plain]-  object 
+object  ^-[#595959,dashed]-  node13 
+node17  ^-[#595959,plain]-  node6  
+node10  ^-[#595959,plain]-  object 
+node10  <-[#595959,dashed]- "isinstanceof" node17 
+node10  ^-[#595959,dashed]-  node14 
+node21  ^-[#595959,plain]-  node10 
+node3   ^-[#595959,plain]-  node21 
+node8   ^-[#595959,plain]-  node21 
+node7   ^-[#595959,plain]-  node21 
+node16  ^-[#595959,plain]-  node21 
+node4   ^-[#595959,plain]-  node21 
+node15  ^-[#595959,plain]-  node2  
+node22  ^-[#595959,plain]-  node2  
+node5   ^-[#595959,plain]-  node15 
+node1   ^-[#595959,plain]-  node22 
+node9   ^-[#595959,plain]-  node18 
+node18  ^-[#595959,plain]-  node2  
+node0   ^-[#595959,plain]-  node10 
+node12  ^-[#595959,plain]-  node10 
+node19  ^-[#595959,plain]-  node10 
+node20  ^-[#595959,plain]-  object 
+@enduml

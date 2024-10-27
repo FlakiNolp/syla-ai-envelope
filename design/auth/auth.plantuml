@@ -1,0 +1,906 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class BaseException {
+   args: 
+   __cause__: 
+   __context__: 
+   __suppress_context__: 
+   __traceback__: 
+   __notes__: 
+   __init__(self, *args: object): 
+   __setstate__(self, __state: dict[str, Any] | None): 
+   with_traceback(self, __tb: TracebackType | None): 
+   add_note(self, __note: str): 
+}
+class Exception
+class node45 as "abc.ABC" {
+   __slots__: 
+}
+class node65 as "abc.ABCMeta" {
+   cls: 
+   __new__(mcls, name, bases, namespace, /, **kwargs): 
+   register(cls, subclass): 
+   __instancecheck__(cls, instance): 
+   __subclasscheck__(cls, subclass): 
+   _dump_registry(cls, file=None): 
+   _abc_registry_clear(cls): 
+   _abc_caches_clear(cls): 
+}
+class node24 as "auth.src.application.api.schemas.ErrorSchema" {
+   error: 
+}
+class node33 as "auth.src.application.api.users.schemas.AuthenticateUserResponseSchema" {
+   access_token: 
+   refresh_token: 
+   token_type: 
+   from_entity(cls, pair_tokens: PairTokens): 
+}
+class node51 as "auth.src.application.api.users.schemas.RefreshAuthenticateUserResponseSchema" {
+   access_token: 
+   token_type: 
+   from_entity(cls, access_token: str): 
+}
+class node28 as "auth.src.configs.config.ConfigSettings" {
+   db_host: 
+   db_port: 
+   db_username: 
+   db_password: 
+   db_database: 
+}
+class node25 as "auth.src.domain.entities.access_token.AccessToken" {
+   header: 
+   payload: 
+   as_generic_type(self): 
+   sub(self): 
+   sub_id(self): 
+}
+class node16 as "auth.src.domain.entities.base.BaseEntity" {
+   id: 
+   __hash__(self): 
+   __eq__(self, __value: "BaseEntity"): 
+   model_dump(self): 
+}
+class node9 as "auth.src.domain.entities.jwt_payload.JWTPayload" {
+   nbf: 
+   exp: 
+   iat: 
+   jti: 
+   iss: 
+   sub: 
+   iat: 
+   exp: 
+   nbf: 
+   aud: 
+   __post_init__(self): 
+   validate(self): 
+   model_dump(self): 
+}
+class node17 as "auth.src.domain.entities.jwt_payload.Sub" {
+   id: 
+   type: 
+   scopes: 
+   email: 
+   hashed_password: 
+}
+class node68 as "auth.src.domain.entities.pair_tokens.PairTokens" {
+   access_token: 
+   refresh_token: 
+   __post_init__(self): 
+}
+class node61 as "auth.src.domain.entities.refresh_token.RefreshToken" {
+   header: 
+   payload: 
+   as_generic_type(self): 
+   sub(self): 
+   sub_id(self): 
+}
+class node41 as "auth.src.domain.entities.user.User" {
+   email: 
+   password: 
+}
+class node12 as "auth.src.domain.exceptions.base.ApplicationException" {
+   message(self): 
+}
+class node44 as "auth.src.domain.exceptions.email.EmailValidationException" {
+   text: 
+   message(self): 
+}
+class node10 as "auth.src.domain.exceptions.jwt.JWTAlgValidationException" {
+   text: 
+   message(self): 
+}
+class node80 as "auth.src.domain.exceptions.jwt.JWTCreationException" {
+   text: 
+   message(self): 
+}
+class node60 as "auth.src.domain.exceptions.jwt.JWTHeaderException" {
+   text: 
+   message(self): 
+}
+class node74 as "auth.src.domain.exceptions.jwt.JWTPayloadException" {
+   text: 
+   message(self): 
+}
+class node57 as "auth.src.domain.exceptions.jwt.JWTValidationPairException" {
+   text: 
+   message(self): 
+}
+class node56 as "auth.src.domain.exceptions.jwt.JWTVerifyException" {
+   text: 
+   message(self): 
+}
+class node32 as "auth.src.domain.exceptions.password.PasswordValidationException" {
+   text: 
+   message(self): 
+}
+class node19 as "auth.src.domain.values.alg.Alg" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node72 as "auth.src.domain.values.base.BaseValueObject" {
+   value: 
+   __post_init__(self): 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node31 as "auth.src.domain.values.email.Email" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node55 as "auth.src.domain.values.jwt_header.JWTHeader" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node23 as "auth.src.domain.values.password.HashedPassword" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node27 as "auth.src.domain.values.password.Password" {
+   value: 
+   validate(self): 
+   as_generic_type(self): 
+   hash_password(self): 
+}
+class node0 as "auth.src.infrastructure.jwt.base.BaseJWT" {
+   encode(self, token: T): 
+   _decode(self, token: str): 
+   decode(self, token: str, _type: TokenType): 
+   verify(self, token: str, _type: TokenType): 
+   validate(self, token: T): 
+}
+class node22 as "auth.src.infrastructure.jwt.base.TokenType" {
+   access_token: 
+   refresh_token: 
+}
+class node26 as "auth.src.infrastructure.jwt.rsa.RSAJWT" {
+   refresh_token_expires_in: 
+   registry: 
+   key: 
+   access_token_expires_in: 
+   __init__(
+        self,
+        key: TK,
+        registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
+        access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
+        refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
+    ): 
+   encode(self, token: T): 
+   convert_from_token_to_entity(token: Token, _type: TokenType): 
+   _decode(self, token: str): 
+   decode(self, token: str, _type: TokenType): 
+   verify(self, token: str, _type: TokenType): 
+   validate(self, token: str | jwt.Token): 
+}
+class node8 as "auth.src.infrastructure.repositories.base_sqlalchemy_repository.BaseSQLAlchemyRepository" {
+   _async_transaction: 
+   __init__(self, session: AsyncSession): 
+}
+class node3 as "auth.src.infrastructure.repositories.models.Base" {
+   id: 
+   registered_at: 
+   updated_at: 
+}
+class node64 as "auth.src.infrastructure.repositories.models.Chat" {
+   __tablename__: 
+   name: 
+   user_id: 
+   user: 
+}
+class node34 as "auth.src.infrastructure.repositories.models.User" {
+   __tablename__: 
+   email: 
+   password: 
+   chats: 
+}
+class node42 as "auth.src.infrastructure.repositories.users.base.BaseUserRepository" {
+   get_by_email(self, email: Email): 
+   get_by_id(self, user_id: UUID7): 
+}
+class node7 as "auth.src.infrastructure.repositories.users.converters.UserConverter" {
+   convert_from_sqlalchemy_to_entity(cls, model: User): 
+   convert_from_entity_to_sqlalchemy(cls, entity: DomainUser): 
+}
+class node39 as "auth.src.infrastructure.repositories.users.sqlalchemy.SQLAlchemyUserRepository" {
+   get_by_id(self, user_id: UUID7): 
+   get_by_email(self, email: Email): 
+}
+class node38 as "auth.src.infrastructure.unit_of_work.base.BaseUnitOfWork" {
+   users: 
+   __init__(self): 
+   __aenter__(self): 
+   __aexit__(self, *args): 
+   commit(self): 
+   rollback(self): 
+   flush(self, *args): 
+}
+class node49 as "auth.src.infrastructure.unit_of_work.sqlalchemy.SQLAlchemyUnitOfWork" {
+   _async_session_maker: 
+   _async_transaction: 
+   users: 
+   __init__(self, session_maker: async_sessionmaker[AsyncSession]): 
+   _provide_async_transaction(func): 
+   provide_async_uow(func): 
+   __aenter__(self, async_transaction: AsyncSession = None): 
+   __aexit__(self, *args): 
+   commit(self): 
+   rollback(self): 
+   flush(self, *args): 
+   begin_nested(self): 
+}
+class node66 as "auth.src.logic.commands.base.BaseCommand"
+class node11 as "auth.src.logic.commands.base.CommandHandler" {
+   handle(self, command: CT): 
+}
+class node79 as "auth.src.logic.commands.users.AuthenticateUserCommand" {
+   email: 
+   password: 
+}
+class node21 as "auth.src.logic.commands.users.AuthenticateUserCommandHandler" {
+   uow: 
+   jwt_factory: 
+   handle(self, command: AuthenticateUserCommand): 
+}
+class node29 as "auth.src.logic.commands.users.RefreshAuthenticateUserCommand" {
+   refresh_token: 
+}
+class node73 as "auth.src.logic.commands.users.RefreshAuthenticateUserCommandHandler" {
+   uow: 
+   jwt_factory: 
+   handle(self, command: RefreshAuthenticateUserCommand): 
+}
+class node77 as "auth.src.logic.exceptions.base.LogicException" {
+   message(self): 
+}
+class node13 as "auth.src.logic.exceptions.mediator.CommandHandlersNotRegisteredException" {
+   command_type: 
+   message(self): 
+}
+class node4 as "auth.src.logic.exceptions.users.EmailExistsException" {
+   text: 
+   message(self): 
+}
+class node35 as "auth.src.logic.exceptions.users.RefreshAuthenticateException" {
+   text: 
+   message(self): 
+}
+class node1 as "auth.src.logic.exceptions.users.UserAuthenticateException" {
+   message(self): 
+}
+class node18 as "auth.src.logic.mediator.base.Mediator" {
+   commands_map: 
+   register_command(self, command: Type[CT], command_handlers: Iterable[CommandHandler[CT, CR]]): 
+   handle_command(self, command: BaseCommand): 
+}
+class dict {
+   __hash__: 
+   __init__(self): 
+   __init__(self: dict[str, _VT], **kwargs: _VT): 
+   __init__(self, __map: SupportsKeysAndGetItem[_KT, _VT]): 
+   __init__(self: dict[str, _VT], __map: SupportsKeysAndGetItem[str, _VT], **kwargs: _VT): 
+   __init__(self, __iterable: Iterable[tuple[_KT, _VT]]): 
+   __init__(self: dict[str, _VT], __iterable: Iterable[tuple[str, _VT]], **kwargs: _VT): 
+   __init__(self: dict[str, str], __iterable: Iterable[list[str]]): 
+   __init__(self: dict[bytes, bytes], __iterable: Iterable[list[bytes]]): 
+   __new__(cls, *args: Any, **kwargs: Any): 
+   copy(self): 
+   keys(self): 
+   values(self): 
+   items(self): 
+   fromkeys(cls, __iterable: Iterable[_T], __value: None = None): 
+   fromkeys(cls, __iterable: Iterable[_T], __value: _S): 
+   get(self, __key: _KT): 
+   get(self, __key: _KT, __default: _VT): 
+   get(self, __key: _KT, __default: _T): 
+   pop(self, __key: _KT): 
+   pop(self, __key: _KT, __default: _VT): 
+   pop(self, __key: _KT, __default: _T): 
+   __len__(self): 
+   __getitem__(self, __key: _KT): 
+   __setitem__(self, __key: _KT, __value: _VT): 
+   __delitem__(self, __key: _KT): 
+   __iter__(self): 
+   __eq__(self, __value: object): 
+   __reversed__(self): 
+   __class_getitem__(cls, __item: Any): 
+   __or__(self, __value: dict[_KT, _VT]): 
+   __or__(self, __value: dict[_T1, _T2]): 
+   __ror__(self, __value: dict[_KT, _VT]): 
+   __ror__(self, __value: dict[_T1, _T2]): 
+   __ior__(self, __value: SupportsKeysAndGetItem[_KT, _VT]): 
+   __ior__(self, __value: Iterable[tuple[_KT, _VT]]): 
+}
+class node43 as "domain.entities.base.BaseEntity" {
+   id: 
+   __hash__(self): 
+   __eq__(self, __value: "BaseEntity"): 
+   model_dump(self, uuid_conversation: bool = False): 
+}
+class node30 as "domain.exceptions.base.ApplicationException" {
+   message(self): 
+}
+class node70 as "domain.values.base.BaseValueObject" {
+   value: 
+   __post_init__(self): 
+   validate(self): 
+   as_generic_type(self): 
+}
+class node47 as "enum.Enum" {
+   result: 
+   __context__: 
+   exc: 
+   ve_exc: 
+   __signature__(cls): 
+   __new__(cls, value): 
+   __init__(self, *args, **kwds): 
+   _generate_next_value_(name, start, count, last_values): 
+   _missing_(cls, value): 
+   __repr__(self): 
+   __str__(self): 
+   __dir__(self): 
+   __format__(self, format_spec): 
+   __hash__(self): 
+   __reduce_ex__(self, proto): 
+   __deepcopy__(self,memo): 
+   __copy__(self): 
+   name(self): 
+   value(self): 
+}
+class node5 as "enum.EnumMeta" {
+   _member_names_: 
+   _member_map_: 
+   _value2member_map_: 
+   __new__(
+            metacls: type[_typeshed.Self],
+            cls: str,
+            bases: tuple[type, ...],
+            classdict: _EnumDict,
+            *,
+            boundary: FlagBoundary | None = None,
+            _simple: bool = False,
+            **kwds: Any,
+        ): 
+   __prepare__(metacls, cls: str, bases: tuple[type, ...], **kwds: Any): 
+   __iter__(self: type[_EnumMemberT]): 
+   __reversed__(self: type[_EnumMemberT]): 
+   __contains__(self: type[Any], value: object): 
+   __getitem__(self: type[_EnumMemberT], name: str): 
+   __members__(self: type[_EnumMemberT]): 
+   __len__(self): 
+   __bool__(self): 
+   __dir__(self): 
+   __call__(cls: type[_EnumMemberT], value: Any, names: None = None): 
+   __call__(
+            cls,
+            value: str,
+            names: _EnumNames,
+            *,
+            module: str | None = None,
+            qualname: str | None = None,
+            type: type | None = None,
+            start: int = 1,
+            boundary: FlagBoundary | None = None,
+        ): 
+   __call__(cls: type[_EnumMemberT], value: Any, *values: Any): 
+}
+class node50 as "infrastructure.jwt.base.BaseJWT" {
+   encode(self, token: T): 
+   _decode(self, token: str): 
+   decode(self, token: str, _type: TokenType): 
+   verify(self, token: str, _type: TokenType): 
+   validate(self, token: T): 
+}
+class node62 as "infrastructure.repositories.base_sqlalchemy_repository.BaseSQLAlchemyRepository" {
+   _async_transaction: 
+   __init__(self, session: AsyncSession): 
+}
+class node75 as "infrastructure.repositories.users.base.BaseUserRepository" {
+   get_by_email(self, email: Email): 
+   add(self, user: User): 
+   get_by_id(self, user_id: UUID7): 
+}
+class node20 as "infrastructure.unit_of_work.base.BaseUnitOfWork" {
+   users: 
+   chats: 
+   __init__(self): 
+   __aenter__(self, *args, **kwargs): 
+   __aexit__(self, *args): 
+   commit(self): 
+   rollback(self): 
+   flush(self, *args): 
+}
+class node53 as "logic.commands.base.BaseCommand"
+class node40 as "logic.commands.base.CommandHandler" {
+   handle(self, command: CT): 
+}
+class node48 as "logic.exceptions.base.LogicException" {
+   message(self): 
+}
+class object {
+   __doc__: 
+   __dict__: 
+   __module__: 
+   __annotations__: 
+   __class__(self): 
+   __class__(self, __type: type[object]): 
+   __init__(self): 
+   __new__(cls): 
+   __setattr__(self, __name: str, __value: Any): 
+   __delattr__(self, __name: str): 
+   __eq__(self, __value: object): 
+   __ne__(self, __value: object): 
+   __str__(self): 
+   __repr__(self): 
+   __hash__(self): 
+   __format__(self, __format_spec: str): 
+   __getattribute__(self, __name: str): 
+   __sizeof__(self): 
+   __reduce__(self): 
+   __reduce_ex__(self, __protocol: SupportsIndex): 
+   __getstate__(self): 
+   __dir__(self): 
+   __init_subclass__(cls): 
+   __subclasshook__(cls, __subclass: type): 
+}
+class node76 as "pydantic._internal._model_construction.ModelMetaclass" {
+   __pydantic_complete__: 
+   __pydantic_post_init__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_decorators__: 
+   model_computed_fields: 
+   __pydantic_custom_init__: 
+   __pydantic_parent_namespace__: 
+   __new__(
+        mcs,
+        cls_name: str,
+        bases: tuple[type[Any], ...],
+        namespace: dict[str, Any],
+        __pydantic_generic_metadata__: PydanticGenericMetadata | None = None,
+        __pydantic_reset_parent_namespace__: bool = True,
+        _create_model_module: str | None = None,
+        **kwargs: Any,
+    ): 
+   __getattr__(self, item: str): 
+   __prepare__(cls, *args: Any, **kwargs: Any): 
+   __instancecheck__(self, instance: Any): 
+   _collect_bases_data(bases: tuple[type[Any], ...]): 
+   __fields__(self): 
+   __dir__(self): 
+}
+class node6 as "pydantic.main.BaseModel" {
+   __pydantic_parent_namespace__: 
+   model_config: 
+   model_fields: 
+   model_computed_fields: 
+   __class_vars__: 
+   __private_attributes__: 
+   __signature__: 
+   __pydantic_complete__: 
+   __pydantic_core_schema__: 
+   __pydantic_custom_init__: 
+   __pydantic_decorators__: 
+   __pydantic_generic_metadata__: 
+   __pydantic_parent_namespace__: 
+   __pydantic_post_init__: 
+   __pydantic_root_model__: 
+   __pydantic_serializer__: 
+   __pydantic_validator__: 
+   __pydantic_extra__: 
+   __pydantic_fields_set__: 
+   __pydantic_private__: 
+   __pydantic_core_schema__: 
+   __pydantic_validator__: 
+   __pydantic_serializer__: 
+   __slots__: 
+   __pydantic_base_init__: 
+   __repr_name__: 
+   __repr_str__: 
+   __pretty__: 
+   __rich_repr__: 
+   __init__(self, /, **data: Any): 
+   model_extra(self): 
+   model_fields_set(self): 
+   model_construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   model_copy(self, *, update: dict[str, Any] | None = None, deep: bool = False): 
+   model_dump(
+        self,
+        *,
+        mode: Literal['json', 'python'] | str = 'python',
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_dump_json(
+        self,
+        *,
+        indent: int | None = None,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        context: Any | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        round_trip: bool = False,
+        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        serialize_as_any: bool = False,
+    ): 
+   model_json_schema(
+        cls,
+        by_alias: bool = True,
+        ref_template: str = DEFAULT_REF_TEMPLATE,
+        schema_generator: type[GenerateJsonSchema] = GenerateJsonSchema,
+        mode: JsonSchemaMode = 'validation',
+    ): 
+   model_parametrized_name(cls, params: tuple[type[Any], ...]): 
+   model_post_init(self, __context: Any): 
+   model_rebuild(
+        cls,
+        *,
+        force: bool = False,
+        raise_errors: bool = True,
+        _parent_namespace_depth: int = 2,
+        _types_namespace: dict[str, Any] | None = None,
+    ): 
+   model_validate(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        from_attributes: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_json(
+        cls,
+        json_data: str | bytes | bytearray,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   model_validate_strings(
+        cls,
+        obj: Any,
+        *,
+        strict: bool | None = None,
+        context: Any | None = None,
+    ): 
+   __get_pydantic_core_schema__(cls, source: type[BaseModel], handler: GetCoreSchemaHandler, /): 
+   __get_pydantic_json_schema__(
+        cls,
+        core_schema: CoreSchema,
+        handler: GetJsonSchemaHandler,
+        /,
+    ): 
+   __pydantic_init_subclass__(cls, **kwargs: Any): 
+   __class_getitem__(
+        cls, typevar_values: type[Any] | tuple[type[Any], ...]
+    ): 
+   __copy__(self): 
+   __deepcopy__(self, memo: dict[int, Any] | None = None): 
+   __getattr__(self, item: str): 
+   __setattr__(self, name: str, value: Any): 
+   __delattr__(self, item: str): 
+   _check_frozen(self, name: str, value: Any): 
+   __getstate__(self): 
+   __setstate__(self, state: dict[Any, Any]): 
+   __eq__(self, other: Any): 
+   __init_subclass__(cls, **kwargs: Unpack[ConfigDict]): 
+   __iter__(self): 
+   __repr__(self): 
+   __repr_args__(self): 
+   __str__(self): 
+   __fields__(self): 
+   __fields_set__(self): 
+   dict(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+    ): 
+   json(  # noqa: D102
+        self,
+        *,
+        include: IncEx | None = None,
+        exclude: IncEx | None = None,
+        by_alias: bool = False,
+        exclude_unset: bool = False,
+        exclude_defaults: bool = False,
+        exclude_none: bool = False,
+        encoder: Callable[[Any], Any] | None = PydanticUndefined,  # type: ignore[assignment]
+        models_as_dict: bool = PydanticUndefined,  # type: ignore[assignment]
+        **dumps_kwargs: Any,
+    ): 
+   parse_obj(cls, obj: Any): 
+   parse_raw(  # noqa: D102
+        cls,
+        b: str | bytes,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   parse_file(  # noqa: D102
+        cls,
+        path: str | Path,
+        *,
+        content_type: str | None = None,
+        encoding: str = 'utf8',
+        proto: DeprecatedParseProtocol | None = None,
+        allow_pickle: bool = False,
+    ): 
+   from_orm(cls, obj: Any): 
+   construct(cls, _fields_set: set[str] | None = None, **values: Any): 
+   copy(
+        self,
+        *,
+        include: AbstractSetIntStr | MappingIntStrAny | None = None,
+        exclude: AbstractSetIntStr | MappingIntStrAny | None = None,
+        update: Dict[str, Any] | None = None,  # noqa UP006
+        deep: bool = False,
+    ): 
+   schema(  # noqa: D102
+        cls, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE
+    ): 
+   schema_json(  # noqa: D102
+        cls, *, by_alias: bool = True, ref_template: str = DEFAULT_REF_TEMPLATE, **dumps_kwargs: Any
+    ): 
+   validate(cls, value: Any): 
+   update_forward_refs(cls, **localns: Any): 
+   _iter(self, *args: Any, **kwargs: Any): 
+   _copy_and_set_values(self, *args: Any, **kwargs: Any): 
+   _get_value(cls, *args: Any, **kwargs: Any): 
+   _calculate_keys(self, *args: Any, **kwargs: Any): 
+}
+class node15 as "pydantic_settings.main.BaseSettings" {
+   __pydantic_base_init__: 
+   model_config: 
+   __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+        **values: Any,
+    ): 
+   settings_customise_sources(
+        cls,
+        settings_cls: type[BaseSettings],
+        init_settings: PydanticBaseSettingsSource,
+        env_settings: PydanticBaseSettingsSource,
+        dotenv_settings: PydanticBaseSettingsSource,
+        file_secret_settings: PydanticBaseSettingsSource,
+    ): 
+   _settings_build_values(
+        self,
+        init_kwargs: dict[str, Any],
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = None,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _secrets_dir: PathType | None = None,
+    ): 
+}
+class node46 as "sqlalchemy.inspection.Inspectable" {
+   __slots__: 
+}
+class node52 as "sqlalchemy.orm.decl_api.DeclarativeAttributeIntercept"
+class node58 as "sqlalchemy.orm.decl_api.DeclarativeBase" {
+   _sa_registry: 
+   registry: 
+   metadata: 
+   __name__: 
+   __mapper__: 
+   __table__: 
+   __tablename__: 
+   __mapper_args__: 
+   __table_args__: 
+   _sa_inspect_type(self): 
+   _sa_inspect_instance(self): 
+   __init__(self, **kw: Any): 
+   __init_subclass__(cls, **kw: Any): 
+}
+class node54 as "typing.Collection" {
+   __len__(self): 
+}
+class node37 as "typing.Container" {
+   __contains__(self, x: object, /): 
+}
+class node69 as "typing.Hashable" {
+   __hash__(self): 
+}
+class node71 as "typing.Iterable" {
+   __iter__(self): 
+}
+class node78 as "typing.Iterator" {
+   __next__(self): 
+   __iter__(self): 
+}
+class node14 as "typing.Mapping" {
+   __getitem__(self, key: _KT, /): 
+   get(self, key: _KT, /): 
+   get(self, key: _KT, /, default: _VT_co | _T): 
+   items(self): 
+   keys(self): 
+   values(self): 
+   __contains__(self, key: object, /): 
+   __eq__(self, other: object, /): 
+}
+class node2 as "typing.MutableMapping" {
+   __setitem__(self, key: _KT, value: _VT, /): 
+   __delitem__(self, key: _KT, /): 
+   clear(self): 
+   pop(self, key: _KT, /): 
+   pop(self, key: _KT, /, default: _VT): 
+   pop(self, key: _KT, /, default: _T): 
+   popitem(self): 
+   setdefault(self: MutableMapping[_KT, _T | None], key: _KT, default: None = None, /): 
+   setdefault(self, key: _KT, default: _VT, /): 
+   update(self, m: SupportsKeysAndGetItem[_KT, _VT], /, **kwargs: _VT): 
+   update(self, m: Iterable[tuple[_KT, _VT]], /, **kwargs: _VT): 
+   update(self, **kwargs: _VT): 
+}
+
+BaseException  ^-[#595959,plain]-  object        
+Exception      ^-[#595959,plain]-  BaseException 
+node45         ^-[#595959,plain]-  object        
+node24         ^-[#595959,plain]-  node6         
+node33         ^-[#595959,plain]-  node6         
+node51         ^-[#595959,plain]-  node6         
+node28         ^-[#595959,plain]-  node15        
+node25         ^-[#595959,plain]-  node43        
+node16         ^-[#595959,plain]-  node45        
+node16         ^-[#595959,dashed]-  node69        
+node9          ^-[#595959,plain]-  node43        
+node17         ^-[#595959,plain]-  object        
+node68         ^-[#595959,plain]-  node43        
+node61         ^-[#595959,plain]-  node43        
+node41         ^-[#595959,plain]-  node43        
+node12         ^-[#595959,plain]-  Exception     
+node44         ^-[#595959,plain]-  node30        
+node10         ^-[#595959,plain]-  node30        
+node80         ^-[#595959,plain]-  node30        
+node60         ^-[#595959,plain]-  node30        
+node74         ^-[#595959,plain]-  node30        
+node57         ^-[#595959,plain]-  node30        
+node56         ^-[#595959,plain]-  node30        
+node32         ^-[#595959,plain]-  node30        
+node19         ^-[#595959,plain]-  node70        
+node72         ^-[#595959,plain]-  node45        
+node31         ^-[#595959,plain]-  node70        
+node55         ^-[#595959,plain]-  node70        
+node23         ^-[#595959,plain]-  node70        
+node27         ^-[#595959,plain]-  node70        
+node0          ^-[#595959,plain]-  node45        
+node22         ^-[#595959,plain]-  node47        
+node26         ^-[#595959,plain]-  node50        
+node8          ^-[#595959,plain]-  node45        
+node3          ^-[#595959,plain]-  node58        
+node64         ^-[#595959,plain]-  node3         
+node34         ^-[#595959,plain]-  node3         
+node42         ^-[#595959,plain]-  node45        
+node7          ^-[#595959,plain]-  object        
+node39         ^-[#595959,plain]-  node62        
+node39         ^-[#595959,plain]-  node75        
+node38         ^-[#595959,plain]-  node45        
+node49         ^-[#595959,plain]-  node20        
+node66         ^-[#595959,plain]-  node45        
+node11         ^-[#595959,plain]-  node45        
+node79         ^-[#595959,plain]-  node53        
+node21         ^-[#595959,plain]-  node40        
+node29         ^-[#595959,plain]-  node53        
+node73         ^-[#595959,plain]-  node40        
+node77         ^-[#595959,plain]-  node30        
+node13         ^-[#595959,plain]-  node48        
+node4          ^-[#595959,plain]-  node48        
+node35         ^-[#595959,plain]-  node48        
+node1          ^-[#595959,plain]-  node48        
+node18         ^-[#595959,plain]-  object        
+dict           ^-[#595959,dashed]-  node69        
+dict           ^-[#595959,dashed]-  node78        
+dict           ^-[#595959,plain]-  node2         
+node43         ^-[#595959,plain]-  node45        
+node43         ^-[#595959,dashed]-  node69        
+node30         ^-[#595959,plain]-  Exception     
+node70         ^-[#595959,plain]-  node45        
+node47         <-[#595959,dashed]- "isinstanceof" node5         
+node47         ^-[#595959,plain]-  object        
+node47         ^-[#595959,dashed]-  node69        
+node5          ^-[#595959,dashed]-  node71        
+node5          ^-[#595959,dashed]-  node78        
+node50         ^-[#595959,plain]-  node45        
+node62         ^-[#595959,plain]-  node45        
+node75         ^-[#595959,plain]-  node45        
+node20         ^-[#595959,plain]-  node45        
+node53         ^-[#595959,plain]-  node45        
+node40         ^-[#595959,plain]-  node45        
+node48         ^-[#595959,plain]-  node30        
+object         ^-[#595959,dashed]-  node69        
+node76         ^-[#595959,plain]-  node65        
+node6          ^-[#595959,plain]-  object        
+node6          <-[#595959,dashed]- "isinstanceof" node76        
+node6          ^-[#595959,dashed]-  node71        
+node15         ^-[#595959,plain]-  node6         
+node46         ^-[#595959,plain]-  object        
+node52         ^-[#595959,plain]-  node46        
+node58         ^-[#595959,plain]-  node46        
+node58         <-[#595959,dashed]- "isinstanceof" node52        
+node54         ^-[#595959,plain]-  node37        
+node54         ^-[#595959,plain]-  node71        
+node2          ^-[#595959,plain]-  node14        
+@enduml

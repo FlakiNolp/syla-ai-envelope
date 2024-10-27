@@ -5,6 +5,10 @@ import aiohttp
 from aiohttp import ClientResponse
 from fastapi import HTTPException
 
+from ai.schemas import QARequest
+
+VECTOR_DB_URL = "http://86.127.246.87:22403/v1/qa/retrieval"
+
 
 @asynccontextmanager
 async def send(url: str, method: str, data: dict | bytes = None) -> ClientResponse:
@@ -23,8 +27,7 @@ async def send(url: str, method: str, data: dict | bytes = None) -> ClientRespon
                 raise HTTPException(status_code=resp.status, detail=error_text)
 
 
-async def get_context(query: str, hypothetical_answers: list) -> dict:
-    data = {"query": query, "hypothetical_answers": hypothetical_answers}
-    async with send("url", "GET", data=data) as resp:
+async def get_context(request: QARequest) -> dict:
+    async with send(VECTOR_DB_URL, "POST", data=request.model_dump()) as resp:
         response: dict = await resp.json()
         return response

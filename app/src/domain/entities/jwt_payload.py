@@ -10,7 +10,7 @@ from domain.values.id import uuid7_gen
 
 class Sub(TypedDict, total=False):
     id: str
-    type: Literal["access", "refresh", "project", "registration"]
+    type: Literal["access", "refresh", "registration"]
     scopes: list[str]
     email: str
     hashed_password: str
@@ -22,7 +22,7 @@ class JWTPayload(BaseEntity):
     iss: str | None = field(default=None)
     sub: Sub = field(default=None)
     iat: datetime.datetime = field(
-        default_factory=lambda: datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(minutes=30), kw_only=True
+        default_factory=lambda: datetime.datetime.now(tz=datetime.UTC) - datetime.timedelta(minutes=1), kw_only=True
     )
     exp: datetime.datetime | datetime.timedelta = field(default=None, kw_only=True)
     nbf: datetime.datetime | None = field(default=None)

@@ -106,7 +106,7 @@ services:
       EMAIL_PORT: 587
     volumes:
       - ./app/src/:/src/
-      - ./public_key.pem:/etc/ssl/public_key.pem:ro
+      - ./private_key.pem:/etc/ssl/private_key.pem:ro
     networks:
       backend:
     depends_on:
