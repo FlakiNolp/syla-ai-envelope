@@ -11,7 +11,12 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.rsa import RSAJWT
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from infrastructure.unit_of_work.sqlalchemy import SQLAlchemyUnitOfWork
-from logic.commands.users import AuthenticateUserCommand, AuthenticateUserCommandHandler
+from logic.commands.users import (
+    AuthenticateUserCommand,
+    AuthenticateUserCommandHandler,
+    RefreshAuthenticateUserCommand,
+    RefreshAuthenticateUserCommandHandler,
+)
 from logic.mediator.base import Mediator
 
 
@@ -26,7 +31,7 @@ def init_container():
 
     container.register(ConfigSettings, instance=ConfigSettings(), scope=Scope.singleton)
 
-    with open("logic/secrets/private_key.pem", "rb") as f:
+    with open("/etc/ssl/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
     def init_mediator() -> Mediator:
@@ -34,8 +39,12 @@ def init_container():
 
         # Users
         container.register(AuthenticateUserCommandHandler)
+        container.register(RefreshAuthenticateUserCommandHandler)
 
         mediator.register_command(AuthenticateUserCommand, [container.resolve(AuthenticateUserCommandHandler)])
+        mediator.register_command(
+            RefreshAuthenticateUserCommand, [container.resolve(RefreshAuthenticateUserCommandHandler)]
+        )
 
         return mediator
 
@@ -50,11 +59,9 @@ def init_container():
                 password=config.db_password,
                 database=config.db_database,
             ),
-            echo=True
+            echo=True,
         )
-        _async_session_maker = async_sessionmaker(
-            _async_engine, expire_on_commit=False
-        )
+        _async_session_maker = async_sessionmaker(_async_engine, expire_on_commit=False)
         return SQLAlchemyUnitOfWork(_async_session_maker)
 
     container.register(

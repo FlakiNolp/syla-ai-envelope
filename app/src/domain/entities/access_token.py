@@ -20,9 +20,4 @@ class AccessToken(BaseEntity):
 
     @property
     def sub_id(self):
-        return self.payload.sub['id']
-
-
-if __name__ == "__main__":
-    access_token = AccessToken(JWTHeader(Alg("RS256")), JWTPayload(sub={"type": "registration"}))
-    print(access_token.sub)
+        return self.payload.sub["id"]

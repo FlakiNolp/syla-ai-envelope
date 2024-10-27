@@ -16,9 +16,22 @@ class SQLAlchemyChatRepository(BaseChatRepository, BaseSQLAlchemyRepository):
         self._async_transaction.add(chat)
 
     async def get_chats_by_user_id(self, user_id: UUID7) -> list[Chat]:
-        chats = (await self._async_transaction.scalars(select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id))).unique().all()
+        chats = (
+            (await self._async_transaction.scalars(select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id)))
+            .unique()
+            .all()
+        )
         chats = [ChatConverter.convert_from_sqlalchemy_to_entity(chat) for chat in chats]
         return chats
 
     async def exists_by_user_id(self, user_id: UUID7, chat_id: UUID7) -> bool:
-        return True if (await self._async_transaction.scalars(select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id, SQLAlchemyChat.id == chat_id))).one_or_none() is not None else False
+        return (
+            True
+            if (
+                await self._async_transaction.scalars(
+                    select(SQLAlchemyChat).filter(SQLAlchemyChat.user_id == user_id, SQLAlchemyChat.id == chat_id)
+                )
+            ).one_or_none()
+            is not None
+            else False
+        )

@@ -18,6 +18,14 @@ class SQLAlchemyUnitOfWork(BaseUnitOfWork):
 
         return wrapper
 
+    @staticmethod
+    def provide_async_uow(func):
+        async def wrapper(self, *args, **kwargs):
+            async with self.uow:
+                return await func(self, *args, **kwargs)
+
+        return wrapper
+
     @_provide_async_transaction
     async def __aenter__(self, async_transaction: AsyncSession = None):
         self._async_transaction = async_transaction

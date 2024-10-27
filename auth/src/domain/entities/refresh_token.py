@@ -12,3 +12,11 @@ class RefreshToken(BaseEntity):
 
     def as_generic_type(self):
         return {"header": self.header, "payload": self.payload.model_dump()}
+
+    @property
+    def sub(self):
+        return self.payload.sub
+
+    @property
+    def sub_id(self):
+        return self.sub["id"]

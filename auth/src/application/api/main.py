@@ -16,7 +16,7 @@ def create_app():
     )
     app.include_router(users_router)
 
-    origins = ["*"]
+    origins = ["http://localhost:3000", "http://31.129.50.189:8000", "http://31.129.50.189:8001"]
 
     app.add_middleware(
         CORSMiddleware,
@@ -24,7 +24,6 @@ def create_app():
         allow_credentials=True,
         allow_methods=["POST", "GET", "PUT", "DELETE"],
         allow_headers=["*"],
-        expose_headers=["*"],
     )
 
     return app

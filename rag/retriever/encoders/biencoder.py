@@ -10,7 +10,7 @@ from transformers import AutoModel, AutoTokenizer
 
 class DenseBiEncoder(ABC):
     @abstractmethod
-    def encode(self, query: str) -> tuple[str, str]:
+    def encode(self, query: str, mode: str) -> tuple[str, str]:
         pass
 
     @abstractmethod
@@ -26,9 +26,7 @@ class DenseBiEncoder(ABC):
 
 class SparseBiEncoder(ABC):
     @abstractmethod
-    def encode(
-        self, texts: str | list[str], vocab: dict[str, int]
-    ) -> list[tuple[int, float]]:
+    def encode(self, texts: str | list[str]) -> list[tuple[int, float]]:
         pass
 
     @abstractmethod
@@ -51,10 +49,16 @@ class UserBGESparse(SparseBiEncoder):
         Initializes the UserBGESparse bi-encoder model with sparse vector capabilities.
         Loads model weights from a pre-trained state and prepares the sorted vocabulary.
         """
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = BGEM3FlagModel(
-            settings.sparse_retriever.name, use_fp16=True, normalize_embeddings=True
+            settings.sparse_retriever.name,
+            use_fp16=True,
+            normalize_embeddings=True,
+            device=self.device,
         )
-        self.model.model.sparse_linear.load_state_dict(torch.load("./sparse_linear.pt"))
+        self.model.model.sparse_linear.load_state_dict(
+            torch.load(settings.base_dir_path / "encoders" / "sparse_linear.pt")
+        )
         self.model.model.eval()
 
         vocab = self.model.model.tokenizer.get_vocab()
@@ -67,13 +71,12 @@ class UserBGESparse(SparseBiEncoder):
         raise NotImplementedError
 
     def encode(
-        self, texts: str | list[str], vocab: dict[str, int]
+        self, texts: str | list[str]
     ) -> list[tuple[list[int], list[np.float64]]]:
         """
         Encodes text(s) into sparse vectors using the specified vocabulary.
 
         :param texts: The input text(s) to encode.
-        :param vocab: A vocabulary dictionary mapping tokens to unique IDs.
         :returns: A list of tuples where each tuple contains:
                   - a list of token indices in the vocabulary.
                   - a list of corresponding lexical weights.t64]]]
@@ -87,7 +90,7 @@ class UserBGESparse(SparseBiEncoder):
         sparse_vectors = []
         for weighted_text in result["lexical_weights"]:
             sparse_vector = [
-                weighted_text.get(str(id), 0) for token, id in vocab.items()
+                weighted_text.get(str(id), 0) for token, id in self.sorted_vocab.items()
             ]
             ind = []
             value = []
@@ -105,7 +108,7 @@ class UserBGESparse(SparseBiEncoder):
         child_chunk_size: int = 512,
         parent_overlap: int = 250,
         child_overlap: int = 100,
-    ) -> dict[str | list[str], list[tuple[list[int], list[np.float64]]]]:
+    ) -> dict[str | list[str], list[tuple[list[int], list[float]]]]:
         """
         Encodes text(s) by dividing them into hierarchical chunks with specified overlap.
 
@@ -150,6 +153,8 @@ class UserBGEDense(DenseBiEncoder):
         self.model = AutoModel.from_pretrained(settings.dense_retriever.name)
         self.tokenizer = AutoTokenizer.from_pretrained(settings.dense_retriever.name)
 
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model.to(self.device)
         self.model.eval()
 
     # TODO: add warmup and torch compile
@@ -159,7 +164,7 @@ class UserBGEDense(DenseBiEncoder):
     def create_late_chunks(
         self,
         texts: list[str] | str,
-        model_len: int = 8000,
+        model_len: int = 4000,
         chunk_len: int = 512,
         overlap: int = 150,
     ) -> list[dict[str, np.ndarray]]:
@@ -193,12 +198,12 @@ class UserBGEDense(DenseBiEncoder):
 
                 tokenized_parent_chunk = self.tokenizer(
                     parent_chunk, padding=True, truncation=True, return_tensors="pt"
-                )
+                ).to(self.device)
                 hidden_states = self.model(**tokenized_parent_chunk).last_hidden_state
                 hidden_states = hidden_states[:, 1:-1, :]  # Remove special tokens
 
                 tokenized_parent_chunk = self.tokenizer.convert_ids_to_tokens(
-                    tokenized_parent_chunk["input_ids"].squeeze().tolist(),
+                    tokenized_parent_chunk["input_ids"].cpu().squeeze().tolist(),
                     skip_special_tokens=True,
                 )
 
@@ -215,23 +220,33 @@ class UserBGEDense(DenseBiEncoder):
                         hidden_states[:, start:stop, :].mean(dim=1)
                     )
                     # chunk_embedding = nn.functional.tanh(model.pooler.dense(chunk_embedding)).squeeze().detach().numpy()
-                    chunk_embedding = chunk_embedding.squeeze().detach().numpy()
+                    chunk_embedding = chunk_embedding.cpu().squeeze().tolist()
                     late_chunks[
                         self.tokenizer.convert_tokens_to_string(tokenized_chunk)
                     ] = chunk_embedding
             texts_embeddings.append(late_chunks)
         return texts_embeddings
 
-    def encode(self, query: str) -> np.ndarray[float]:
-        """
+    def encode(self, query: str, mode: str) -> np.ndarray[float]:
+        """0
         Encodes a single query string into a dense vector representation.
 
+        :param mode: The mode of encoding. Can be 'avg-pooling' or 'cls-pooling'.
         :param query: The query string to be encoded.
         :returns: The dense embedding of the query.
         """
-        tokenized_query = self.tokenizer.tokenize(query, add_special_tokens=False)
-        query_embedding = nn.functional.tanh(
-            self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
-        )
-        query_embedding = query_embedding.squeeze().detach().numpy()
+        tokenized_query = self.tokenizer(
+            query, padding=True, truncation=True, return_tensors="pt"
+        ).to(self.device)
+        if mode == "avg-pooling":
+            query_embedding = nn.functional.tanh(
+                self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)
+            )
+            query_embedding = query_embedding.cpu().squeeze().tolist()
+        elif mode == "cls-pooling":
+            query_embedding = (
+                self.model(**tokenized_query)["pooler_output"].cpu().squeeze().tolist()
+            )
+        else:
+            raise NotImplementedError
         return query_embedding

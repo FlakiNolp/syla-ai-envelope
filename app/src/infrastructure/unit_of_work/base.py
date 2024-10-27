@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from infrastructure.repositories.chats.base import BaseChatRepository
 from infrastructure.repositories.users.base import BaseUserRepository
 
+
 class BaseUnitOfWork(ABC):
     users: BaseUserRepository
     chats: BaseChatRepository
@@ -30,11 +31,3 @@ class BaseUnitOfWork(ABC):
     @abstractmethod
     async def flush(self, *args):
         raise NotImplementedError
-
-    @staticmethod
-    def provide_async_uow(func):
-        async def wrapper(self, *args, **kwargs):
-            async with self.uow:
-                return await func(self, *args, **kwargs)
-
-        return wrapper

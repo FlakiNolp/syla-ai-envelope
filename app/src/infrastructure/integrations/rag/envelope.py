@@ -1,21 +1,38 @@
-from dataclasses import dataclass
-from abc import ABC, abstractmethod
-from aiohttp import ClientSession
+import datetime
+from aiohttp import ClientSession, ClientResponse
 
 from domain.entities.message import Message
 from domain.values.author import Author
 from domain.values.id import UUID7
+from infrastructure.exceptions.rag import RagRequestException
+from infrastructure.integrations.rag.base import BaseRag
 
 
-@dataclass
-class Rag(ABC):
-    host: str
-    port: int
+class Rag(BaseRag):
+    def __init__(self, host: str, port: int, retry_attempts: int = 3, timeout: int = 15):
+        self.host: str = host
+        self.port: int = port
+        self.retry_attempts: int = retry_attempts
+        self.timeout: int = timeout
 
-    async def generate_message(self, message: Message, chat_id: UUID7) -> Message:
+    async def send_requests_with_repeat(self, client: ClientSession, message: Message) -> dict:
+        async with client.post(
+            f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text}, timeout=self.timeout
+        ) as response:
+            if not response.ok:
+                raise response.raise_for_status()
+            return await response.json()
+
+    async def generate_answer(self, message: Message, chat_id: UUID7) -> Message | None:
         async with ClientSession() as client:
-            async with client.post(f"http://{self.host}:{self.port}/generate", json={"text": message.text}) as response:
-                if not response.ok:
-                    raise
-                res = await response.json()
-                return Message(chat_id=chat_id, text=res['text'], documents=res['documents'], author=Author.ai)
+            i = 0
+            while i < self.retry_attempts:
+                try:
+                    i += 1
+                    response_json = await self.send_requests_with_repeat(client, message)
+                    return Message(
+                        chat_id=chat_id, text=response_json["answer"], documents=response_json["pics"], author=Author.ai
+                    )
+                except Exception as e:
+                    raise e
+            return None

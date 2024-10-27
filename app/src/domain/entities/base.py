@@ -16,7 +16,7 @@ class BaseEntity(abc.ABC):
     def __hash__(self) -> int:
         return hash(self.id)
 
-    def __eq__(self, __value: 'BaseEntity') -> bool:
+    def __eq__(self, __value: "BaseEntity") -> bool:
         return self.id == __value.id
 
     def model_dump(self, uuid_conversation: bool = False) -> dict:
@@ -25,10 +25,7 @@ class BaseEntity(abc.ABC):
             if isinstance(obj, BaseValueObject):
                 return obj.as_generic_type()
             elif isinstance(obj, BaseEntity):
-                return {
-                    key: to_dict_recursive(value)
-                    for key, value in obj.model_dump().items()
-                }
+                return {key: to_dict_recursive(value) for key, value in obj.model_dump().items()}
             elif isinstance(obj, Iterable) and not isinstance(obj, str):
                 return [to_dict_recursive(item) for item in obj]
             elif isinstance(obj, Enum):
@@ -38,6 +35,4 @@ class BaseEntity(abc.ABC):
             else:
                 return obj
 
-        return {
-            key: to_dict_recursive(value) for key, value in self.__dict__.items()
-        }
+        return {key: to_dict_recursive(value) for key, value in self.__dict__.items()}

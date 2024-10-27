@@ -16,6 +16,7 @@ from infrastructure.email_service.base import BaseEmailService
 from infrastructure.jwt.base import BaseJWT, TokenType
 from infrastructure.unit_of_work.base import BaseUnitOfWork
 from logic.commands.base import BaseCommand, CommandHandler
+from logic.exceptions.users import UserIdExistsException
 
 
 @dataclass(frozen=True)
@@ -32,7 +33,7 @@ class CreateChatHandler(CommandHandler[CreateChat, Chat]):
     async def handle(self, command: CreateChat) -> Chat:
         user = await self.uow.users.get_by_id(UUID7(command.user_id))
         if user is None:
-            raise
+            raise UserIdExistsException(command.user_id)
         chat = user.create_chat(ChatName(command.chat_name))
         await self.uow.chats.add(chat)
         await self.uow.commit()
