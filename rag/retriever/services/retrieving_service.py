@@ -171,6 +171,7 @@ class RetrievingService:
         """
         dense_query = self.user_bg_dense.encode(query, mode="avg-pooling")
         sparse_query = self.user_bg_sparse.encode_text_with_sparse_vectors(query)
+        print(sparse_query)
 
         dense_results = self.client.search(
             collection_name=self.dense_collection_name,
