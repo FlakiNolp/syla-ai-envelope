@@ -42,7 +42,8 @@ def init_container():
     with open("logic/secrets/private_key.pem", "rb") as f:
         container.register(BaseJWT, instance=RSAJWT(key=RSAKey.import_key(value=f.read())), scope=Scope.singleton)
 
-    container.register(BaseEmailService, EmailService, host='smtp.gmail.com', port=587, sender_email='check.telegram.bot@gmail.com', sender_password='jqsoucptkviktkeg', host_server="localhost:8000")
+    config: ConfigSettings = container.resolve(ConfigSettings)
+    container.register(BaseEmailService, EmailService, host=config.email_host, port=config.email_port, sender_email=config.email, sender_password=config.email_password, host_server=config.host_server)
 
     def init_mediator() -> Mediator:
         mediator = Mediator()

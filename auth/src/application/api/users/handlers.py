@@ -35,7 +35,7 @@ async def token(response: JSONResponse, form_data: Annotated[OAuth2PasswordReque
     response.status_code = 200
     response.body = AuthenticateUserResponseSchema.from_entity(pair_tokens).model_dump_json().encode()
     response.set_cookie(key="refresh_token", value=pair_tokens.refresh_token,
-                        expires=int(datetime.timedelta(days=30).total_seconds()), httponly=True)
+                        expires=int(datetime.timedelta(days=30).total_seconds()), httponly=True, samesite=None, domain="31.129.50.189:8001")
     return response
 
 

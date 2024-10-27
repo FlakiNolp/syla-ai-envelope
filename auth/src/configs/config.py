@@ -3,7 +3,6 @@ from pydantic import Field
 
 
 class ConfigSettings(BaseSettings):
-    model_config = SettingsConfigDict(env_file="../.env")
     db_host: str = Field(
         "localhost", alias="DB_HOST"
     )  # По умолчанию ip сервера базы данных localhost
