@@ -6,10 +6,18 @@ from sqlalchemy.orm import mapped_column
 
 from domain.values.id import UUID7, uuid7_gen
 
-ID = Annotated[UUID7, mapped_column("id", UUIDColumn(as_uuid=True), primary_key=True, comment="uuid элемента",
-                                         default_factory=uuid7_gen,
-                                         server_default=func.gen_random_uuid(),
-                                         sort_order=-1000)]
+ID = Annotated[
+    UUID7,
+    mapped_column(
+        "id",
+        UUIDColumn(as_uuid=True),
+        primary_key=True,
+        comment="uuid элемента",
+        default_factory=uuid7_gen,
+        server_default=func.gen_random_uuid(),
+        sort_order=-1000,
+    ),
+]
 CreatedAt = Annotated[datetime.datetime, mapped_column(server_default=func.now())]
 UpdatedAt = Annotated[
     datetime.datetime,

@@ -18,8 +18,5 @@ class PairTokens(BaseEntity):
                 raise JWTValidationPairException(self.access_token)
             if not re.match(r"^(?:[\w-]*\.){2}[\w-]*$", self.refresh_token):
                 raise JWTValidationPairException(self.refresh_token)
-        elif not (
-            isinstance(self.access_token, AccessToken)
-            and isinstance(self.refresh_token, RefreshToken)
-        ):
+        elif not (isinstance(self.access_token, AccessToken) and isinstance(self.refresh_token, RefreshToken)):
             raise JWTValidationPairException(self.access_token)

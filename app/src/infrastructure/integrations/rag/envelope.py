@@ -16,8 +16,9 @@ class Rag(BaseRag):
         self.timeout: int = timeout
 
     async def send_requests_with_repeat(self, client: ClientSession, message: Message) -> dict:
-        async with client.post(f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text},
-                               timeout=self.timeout) as response:
+        async with client.post(
+            f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text}, timeout=self.timeout
+        ) as response:
             if not response.ok:
                 raise response.raise_for_status()
             return await response.json()
@@ -29,8 +30,9 @@ class Rag(BaseRag):
                 try:
                     i += 1
                     response_json = await self.send_requests_with_repeat(client, message)
-                    return Message(chat_id=chat_id, text=response_json['answer'], documents=response_json['pics'],
-                                   author=Author.ai)
+                    return Message(
+                        chat_id=chat_id, text=response_json["answer"], documents=response_json["pics"], author=Author.ai
+                    )
                 except Exception as e:
                     raise e
             return None

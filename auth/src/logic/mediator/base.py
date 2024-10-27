@@ -10,13 +10,9 @@ from logic.exceptions.mediator import (
 
 @dataclass(frozen=True, eq=False)
 class Mediator[CT: BaseCommand, CR: Any]:
-    commands_map: dict[CT, list[CommandHandler]] = field(
-        default_factory=lambda: defaultdict(list), kw_only=True
-    )
+    commands_map: dict[CT, list[CommandHandler]] = field(default_factory=lambda: defaultdict(list), kw_only=True)
 
-    def register_command(
-        self, command: Type[CT], command_handlers: Iterable[CommandHandler[CT, CR]]
-    ):
+    def register_command(self, command: Type[CT], command_handlers: Iterable[CommandHandler[CT, CR]]):
         self.commands_map[command].extend(command_handlers)
 
     async def handle_command(self, command: BaseCommand) -> Iterable[CR]:

@@ -7,4 +7,5 @@ from domain.values.id import UUID7
 
 class BaseRag(ABC):
     @abstractmethod
-    async def generate_answer(self, message: Message, chat_id: UUID7) -> Message | None: raise NotImplementedError
+    async def generate_answer(self, message: Message, chat_id: UUID7) -> Message | None:
+        raise NotImplementedError

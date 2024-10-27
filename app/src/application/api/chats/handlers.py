@@ -13,14 +13,20 @@ from logic.queries.chats import GetChats
 router = APIRouter(tags=["Chats"])
 
 
-@router.put("/create-chat",
-            status_code=status.HTTP_201_CREATED,
-            description="Эндпоинт для создания нового чата",
-            responses={
-                status.HTTP_201_CREATED: {"model": CreateChatResponseSchema},
-                status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
-            })
-async def create_chat(data: CreateChatRequestSchema, access_token: AccessToken = Depends(auth_user), container: Container = Depends(_init_container)):
+@router.put(
+    "/create-chat",
+    status_code=status.HTTP_201_CREATED,
+    description="Эндпоинт для создания нового чата",
+    responses={
+        status.HTTP_201_CREATED: {"model": CreateChatResponseSchema},
+        status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
+    },
+)
+async def create_chat(
+    data: CreateChatRequestSchema,
+    access_token: AccessToken = Depends(auth_user),
+    container: Container = Depends(_init_container),
+):
     try:
         mediator: Mediator = container.resolve(Mediator)
         chat: Chat = (await mediator.handle_command(CreateChat(access_token.sub_id, data.chat_name)))[0]
@@ -29,13 +35,15 @@ async def create_chat(data: CreateChatRequestSchema, access_token: AccessToken =
     return CreateChatResponseSchema.from_entity(chat)
 
 
-@router.get("/chats",
-            status_code=status.HTTP_200_OK,
-            description="Эндпоинт для получения всех чатов пользователя",
-            responses={
-                status.HTTP_200_OK: {"model": GetChatsResponseSchema},
-                status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
-            })
+@router.get(
+    "/chats",
+    status_code=status.HTTP_200_OK,
+    description="Эндпоинт для получения всех чатов пользователя",
+    responses={
+        status.HTTP_200_OK: {"model": GetChatsResponseSchema},
+        status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
+    },
+)
 async def get_chats(access_token: AccessToken = Depends(auth_user), container: Container = Depends(_init_container)):
     try:
         mediator: Mediator = container.resolve(Mediator)

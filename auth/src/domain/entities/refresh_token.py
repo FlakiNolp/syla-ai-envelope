@@ -20,4 +20,3 @@ class RefreshToken(BaseEntity):
     @property
     def sub_id(self):
         return self.sub["id"]
-

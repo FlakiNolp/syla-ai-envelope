@@ -8,8 +8,13 @@ from domain.values.id import UUID7
 
 class BaseChatRepository(abc.ABC):
     @abc.abstractmethod
-    async def add(self, chat: Chat) -> None: raise NotImplementedError
+    async def add(self, chat: Chat) -> None:
+        raise NotImplementedError
+
     @abc.abstractmethod
-    async def get_chats_by_user_id(self, user_id: UUID7) -> list[Chat]: raise NotImplementedError
+    async def get_chats_by_user_id(self, user_id: UUID7) -> list[Chat]:
+        raise NotImplementedError
+
     @abc.abstractmethod
-    async def exists_by_user_id(self, user_id: UUID7, chat_id: UUID7) -> bool: raise NotImplementedError
+    async def exists_by_user_id(self, user_id: UUID7, chat_id: UUID7) -> bool:
+        raise NotImplementedError

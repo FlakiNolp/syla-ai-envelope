@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from infrastructure.repositories.chats.base import BaseChatRepository
 from infrastructure.repositories.users.base import BaseUserRepository
 
+
 class BaseUnitOfWork(ABC):
     users: BaseUserRepository
     chats: BaseChatRepository
