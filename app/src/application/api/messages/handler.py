@@ -5,14 +5,11 @@ from punq import Container
 from application.api.messages.schemas import ReceivedMessageRequestSchema, JSONMessage, \
     GetHistoryRequestSchema, GetHistoryResponseSchema
 from application.api.schemas import ErrorSchema, auth_user
-from application.api.users.schemas import CredentialsUserRequestSchema, RegistrationUserRequestSchema
 from domain.entities.access_token import AccessToken
 from domain.entities.message import Message
 from domain.exceptions.base import ApplicationException
-from domain.values.password import Password
 from logic import _init_container, Mediator
 from logic.commands.message import ReceivedMessage
-from logic.commands.users import RegistrateUserCommand, CheckExistsEmail, ValidateRegistrationCommand
 from logic.queries.message import GetHistoryMessages
 
 router = APIRouter(tags=["Messages"])
@@ -34,6 +31,7 @@ async def post_message(data: ReceivedMessageRequestSchema, access_token: AccessT
         mediator: Mediator = container.resolve(Mediator)
         message: Message = (await mediator.handle_command(ReceivedMessage(data.message, chat_id=data.chat_id, user_id=access_token.sub_id)))[0]
     except ApplicationException as e:
+        raise e
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail={"error": e.message})
     return JSONMessage.from_entity(message)
 

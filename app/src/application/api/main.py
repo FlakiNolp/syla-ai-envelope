@@ -31,7 +31,3 @@ def create_app():
     )
 
     return app
-
-
-if __name__ == "__main__":
-    uvicorn.run(create_app(), host="localhost", port=8000)

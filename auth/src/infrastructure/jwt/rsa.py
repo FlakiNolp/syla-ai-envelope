@@ -14,9 +14,15 @@ from infrastructure.jwt.base import BaseJWT
 from infrastructure.jwt.base import TokenType
 
 
-class RSAJWT[T: PairTokens | AccessToken | RefreshToken](
-    BaseJWT
-):
+class RSAJWT[T: PairTokens | AccessToken | RefreshToken, TK: RSAKey](BaseJWT):
+    def __init__(self, key: TK, registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
+                 access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
+                 refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30)):
+        self.key = key
+        self.registry = registry
+        self.access_token_expires_in = access_token_expires_in
+        self.refresh_token_expires_in = refresh_token_expires_in
+
     def encode(self, token: T) -> str | tuple[str, str]:
         # try:
             if isinstance(token, AccessToken):
@@ -85,5 +91,4 @@ class RSAJWT[T: PairTokens | AccessToken | RefreshToken](
             elif isinstance(token, jwt.Token):
                 self.registry.validate(token.claims)
         except errors.JoseError as e:
-            print(e)
             raise JWTVerifyException(text=token)

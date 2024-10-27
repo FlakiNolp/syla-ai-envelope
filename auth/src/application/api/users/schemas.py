@@ -8,12 +8,14 @@ from domain.entities.pair_tokens import PairTokens
 
 class AuthenticateUserResponseSchema(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
 
     @classmethod
     def from_entity(cls, pair_tokens: PairTokens) -> "AuthenticateUserResponseSchema":
         return cls(
             access_token=pair_tokens.access_token,
+            refresh_token=pair_tokens.refresh_token,
             token_type="Bearer"
         )
 
