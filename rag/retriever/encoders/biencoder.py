@@ -70,9 +70,7 @@ class UserBGESparse(SparseBiEncoder):
     def warmup(self):
         raise NotImplementedError
 
-    def encode(
-        self, texts: str | list[str]
-    ) -> list[tuple[list[int], list[np.float64]]]:
+    def encode(self, texts: str | list[str]) -> list[tuple[list[int], list[float]]]:
         """
         Encodes text(s) into sparse vectors using the specified vocabulary.
 
@@ -97,7 +95,7 @@ class UserBGESparse(SparseBiEncoder):
             for i, weight in enumerate(sparse_vector):
                 if weight != 0:
                     ind.append(i)
-                    value.append(weight)
+                    value.append(float(weight))
             sparse_vectors.append((ind, value))
         return sparse_vectors
 
@@ -167,7 +165,7 @@ class UserBGEDense(DenseBiEncoder):
         model_len: int = 4000,
         chunk_len: int = 512,
         overlap: int = 150,
-    ) -> list[dict[str, np.ndarray]]:
+    ) -> list[dict[str, list]]:
         """
         Generates embeddings for late chunks of text by splitting and processing in hierarchical chunks.
 
@@ -227,7 +225,7 @@ class UserBGEDense(DenseBiEncoder):
             texts_embeddings.append(late_chunks)
         return texts_embeddings
 
-    def encode(self, query: str, mode: str) -> np.ndarray[float]:
+    def encode(self, query: str, mode: str) -> list[float]:
         """0
         Encodes a single query string into a dense vector representation.
 
@@ -249,4 +247,87 @@ class UserBGEDense(DenseBiEncoder):
             )
         else:
             raise NotImplementedError
+        return query_embedding
+
+
+class JinaV3Dense:
+    """A bi-encoder model for dense representation of text using a pre-trained model from Hugging Face."""
+
+    def __init__(self):
+        """
+        Initializes the UserBGEDense bi-encoder model for dense vector representation.
+        Loads the model and tokenizer from a pre-trained Hugging Face model.
+        """
+        self.model = AutoModel.from_pretrained(
+            settings.jina_retriever.name, trust_remote_code=True
+        )
+
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model.to(self.device)
+        self.model.eval()
+
+    # TODO: add warmup and torch compile
+    def warmup(self):
+        raise NotImplementedError
+
+    def create_chunks(
+        self,
+        texts: list[str] | str,
+        parent_chunk_size: int = 1000,
+        child_chunk_size: int = 512,
+        parent_overlap: int = 250,
+        child_overlap: int = 150,
+    ) -> list[dict[str, list[list[float]]]]:
+        """ """
+        if isinstance(texts, str):
+            texts = [texts]
+
+        texts_embeddings = []
+        for text in texts:
+            chunks = {}
+            for parent_chunk_ind in range(
+                0, len(text), parent_chunk_size - parent_overlap
+            ):
+                parent_chunk = safe_text_slice(
+                    text=text,
+                    start=parent_chunk_ind,
+                    length=parent_chunk_size,
+                    mode="words",
+                )[0]
+
+                chunks[parent_chunk] = []
+
+                for chunk_ind in range(
+                    0, len(parent_chunk), child_chunk_size - child_overlap
+                ):
+                    child_chunk = safe_text_slice(
+                        text=parent_chunk,
+                        start=chunk_ind,
+                        length=child_chunk_size,
+                        mode="words",
+                    )[0]
+
+                    embeddings = self.model.encode(
+                        child_chunk, task="retrieval.passage"
+                    ).tolist()
+
+                    chunks[parent_chunk].append(embeddings)
+            texts_embeddings.append(chunks)
+        return texts_embeddings
+
+    def encode(self, query: str, mode: str) -> list[float]:
+        """
+        Encodes a single query string into a dense vector representation.
+
+        :param mode: The mode of encoding. Can be 'query' or 'passage'.
+        :param query: The query string to be encoded.
+        :returns: The dense embedding of the query.
+        """
+        if mode == "query":
+            query_embedding = self.model.encode(query, task="retrieval.query")
+        elif mode == "passage":
+            query_embedding = self.model.encode(query, task="retrieval.passage")
+        else:
+            raise NotImplementedError
+        query_embedding = query_embedding.tolist()
         return query_embedding

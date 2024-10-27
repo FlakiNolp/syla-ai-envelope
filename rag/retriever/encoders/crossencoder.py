@@ -41,7 +41,7 @@ class BGEReranker(CrossEncoder):
     def rerank(
         self,
         query: str,
-        search_results: list[str] | list[tuple[str, str]],
+        search_results: set[str] | set[tuple[str, str]],
         top_k: int = 5,
     ) -> list[tuple[float, str]]:
         """

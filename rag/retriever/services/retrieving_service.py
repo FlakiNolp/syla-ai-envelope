@@ -4,7 +4,7 @@ import uuid
 import json
 import base64
 from retriever.config import settings
-from retriever.encoders import UserBGEDense, UserBGESparse, BGEReranker
+from retriever.encoders import UserBGESparse, BGEReranker, JinaV3Dense
 from retriever.schemas import RetrieveResult, TextRetrieveResult, ImageRetrieveResult
 
 
@@ -26,7 +26,7 @@ class RetrievingService:
         self.dense_collection_name = "docs_dense_collection"
         self.image_collection_name = "image_collection"
         self.user_bg_sparse = UserBGESparse()
-        self.user_bg_dense = UserBGEDense()
+        self.jira_dense = JinaV3Dense()
         self.reranker = BGEReranker()
 
         self.check_collections()
@@ -75,21 +75,24 @@ class RetrievingService:
         # Prepare late chunks
         text_data_path = settings.base_dir_path / "data/updated_main_text.txt"
         text_data = text_data_path.read_text()
-        dense_late_chunks = self.user_bg_dense.create_late_chunks(text_data)
+        dense_late_chunks = self.jira_dense.create_chunks(
+            text_data, parent_chunk_size=2000, child_overlap=50
+        )
 
         # And upload
         for chunk in dense_late_chunks:
-            for text, embedding in chunk.items():
-                self.client.upsert(
-                    collection_name=self.dense_collection_name,
-                    points=[
-                        models.PointStruct(
-                            id=uuid.uuid4().hex,
-                            payload={"text": text},
-                            vector=embedding,
-                        )
-                    ],
-                )
+            for text, embeddings in chunk.items():
+                for embedding in embeddings:
+                    self.client.upsert(
+                        collection_name=self.dense_collection_name,
+                        points=[
+                            models.PointStruct(
+                                id=uuid.uuid4().hex,
+                                payload={"text": text},
+                                vector=embedding,
+                            )
+                        ],
+                    )
 
         # Create sparse collection
         self.client.create_collection(
@@ -138,7 +141,7 @@ class RetrievingService:
         # And upload
         base_image_dir_path = settings.base_dir_path / "data" / "images_word"
         for name, caption in data.items():
-            caption_embedding = self.user_bg_dense.encode(caption, mode="cls-pooling")
+            caption_embedding = self.jira_dense.encode(caption, mode="passage")
             base64_img = base64.b64encode(
                 open(base_image_dir_path / f"Рисунок{name}.png", "rb").read()
             )
@@ -169,7 +172,7 @@ class RetrievingService:
 
         :returns: A `RetrieveResult` object containing ranked text and image results.
         """
-        dense_query = self.user_bg_dense.encode(query, mode="avg-pooling")
+        dense_query = self.jira_dense.encode(query, mode="query")
         sparse_query = self.user_bg_sparse.encode(query)
 
         dense_results = self.client.search(
