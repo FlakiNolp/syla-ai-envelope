@@ -19,6 +19,7 @@ class Rag(BaseRag):
         async with client.post(
             f"http://{self.host}:{self.port}/qa/answer", json={"query": message.text, "tok_k": 2, "top_k_img": 2}, timeout=self.timeout
         ) as response:
+            print(response.status)
             if not response.ok:
                 raise
             return await response.json()
