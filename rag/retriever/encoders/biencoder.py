@@ -49,11 +49,12 @@ class UserBGESparse(SparseBiEncoder):
         Initializes the UserBGESparse bi-encoder model with sparse vector capabilities.
         Loads model weights from a pre-trained state and prepares the sorted vocabulary.
         """
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model = BGEM3FlagModel(
             settings.sparse_retriever.name,
             use_fp16=True,
             normalize_embeddings=True,
-            device="cuda" if torch.cuda.is_available() else "cpu",
+            device=self.device,
         )
         self.model.model.sparse_linear.load_state_dict(
             torch.load(settings.base_dir_path / "encoders" / "sparse_linear.pt")
@@ -151,7 +152,9 @@ class UserBGEDense(DenseBiEncoder):
         """
         self.model = AutoModel.from_pretrained(settings.dense_retriever.name)
         self.tokenizer = AutoTokenizer.from_pretrained(settings.dense_retriever.name)
-        self.model.to("cuda" if torch.cuda.is_available() else "cpu")
+
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.model.to(self.device)
         self.model.eval()
 
     # TODO: add warmup and torch compile
@@ -195,12 +198,12 @@ class UserBGEDense(DenseBiEncoder):
 
                 tokenized_parent_chunk = self.tokenizer(
                     parent_chunk, padding=True, truncation=True, return_tensors="pt"
-                )
+                ).to(self.device)
                 hidden_states = self.model(**tokenized_parent_chunk).last_hidden_state
                 hidden_states = hidden_states[:, 1:-1, :]  # Remove special tokens
 
                 tokenized_parent_chunk = self.tokenizer.convert_ids_to_tokens(
-                    tokenized_parent_chunk["input_ids"].squeeze().tolist(),
+                    tokenized_parent_chunk["input_ids"].squeeze().cpu().tolist(),
                     skip_special_tokens=True,
                 )
 
@@ -217,7 +220,7 @@ class UserBGEDense(DenseBiEncoder):
                         hidden_states[:, start:stop, :].mean(dim=1)
                     )
                     # chunk_embedding = nn.functional.tanh(model.pooler.dense(chunk_embedding)).squeeze().detach().numpy()
-                    chunk_embedding = chunk_embedding.squeeze().detach().numpy()
+                    chunk_embedding = chunk_embedding.detach().squeeze().numpy()
                     late_chunks[
                         self.tokenizer.convert_tokens_to_string(tokenized_chunk)
                     ] = chunk_embedding
@@ -232,7 +235,7 @@ class UserBGEDense(DenseBiEncoder):
         :param query: The query string to be encoded.
         :returns: The dense embedding of the query.
         """
-        tokenized_query = self.tokenizer(query, padding=True, truncation=True)
+        tokenized_query = self.tokenizer(query, padding=True, truncation=True).to(self.device)
         if mode == "avg-pooling":
             query_embedding = nn.functional.tanh(
                 self.model(**tokenized_query).last_hidden_state[:, 1:-1, :].mean(dim=1)

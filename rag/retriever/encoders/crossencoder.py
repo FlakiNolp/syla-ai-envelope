@@ -21,10 +21,11 @@ class BGEReranker(CrossEncoder):
         The reranker model is loaded in evaluation mode and configured to use
         16-bit floating-point precision for improved efficiency.
         """
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.reranker = FlagReranker(
             settings.reranker.name,
             use_fp16=True,
-            device="cuda" if torch.cuda.is_available() else "cpu",
+            device=self.device,
         )
         self.reranker.model.eval()
 
