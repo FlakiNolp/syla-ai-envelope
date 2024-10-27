@@ -68,7 +68,7 @@ class BGEReranker(CrossEncoder):
             print(type(passage))
             print(type(query))
             rerank_score = self.reranker.compute_score(
-                (query, passage), normalize=True
+                [(query, passage)], normalize=True
             )[0]
             scored_results.append((rerank_score, result))
         scored_results = sorted(scored_results, key=lambda x: x[0], reverse=True)[
