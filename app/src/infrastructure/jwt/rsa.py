@@ -19,13 +19,11 @@ class RSAJWT[T: AccessToken | RegistrationToken, TK: RSAKey](BaseJWT):
         key: TK,
         registry: jwt.JWTClaimsRegistry = jwt.JWTClaimsRegistry(),
         access_token_expires_in: datetime.timedelta = datetime.timedelta(days=1),
-        refresh_token_expires_in: datetime.timedelta = datetime.timedelta(days=30),
         registration_token_expires_in: datetime.timedelta = datetime.timedelta(minutes=15),
     ):
         self.key = key
         self.registry = registry
         self.access_token_expires_in = access_token_expires_in
-        self.refresh_token_expires_in = refresh_token_expires_in
         self.registration_token_expires_in = registration_token_expires_in
 
     def encode(self, token: T) -> str | tuple[str, str]:
@@ -59,7 +57,6 @@ class RSAJWT[T: AccessToken | RegistrationToken, TK: RSAKey](BaseJWT):
 
     def _decode(self, token: str) -> jwt.Token:
         try:
-            print(token)
             return jwt.decode(value=token, key=self.key)
         except errors.JoseError as e:
             raise JWTVerifyException(text=token)

@@ -10,7 +10,7 @@ from domain.values.id import uuid7_gen
 
 class Sub(TypedDict, total=False):
     id: str
-    type: Literal["access", "refresh", "project", "registration"]
+    type: Literal["access", "refresh", "registration"]
     scopes: list[str]
     email: str
     hashed_password: str

@@ -63,6 +63,7 @@ class RegistrateUserCommandHandler(CommandHandler[RegistrateUserCommand, None]):
                     sub={
                         "email": command.email,
                         "hashed_password": Password(command.password).hash_password().as_generic_type(),
+                        "type": TokenType.registration_token.value
                     }
                 ),
             )
