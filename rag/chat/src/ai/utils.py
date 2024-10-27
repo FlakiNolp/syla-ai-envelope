@@ -31,7 +31,7 @@ async def llm_request_paraphrase_with_images(query: str, answer: str, base_64_pi
 
     response = await openai_client.chat.completions.create(
         model="Qwen/Qwen2-VL-7B-Instruct",
-        max_tokens=2048,
+        max_tokens=1024,
         temperature=0.3,
         messages=messages
     )
@@ -51,7 +51,7 @@ async def llm_request(query: str, context: str) -> str:
 
     response = await openai_client.chat.completions.create(
         model="Qwen/Qwen2-VL-7B-Instruct",
-        max_tokens=2048,
+        max_tokens=1024,
         temperature=0.2,
         messages=messages,
         presence_penalty=-0.5
@@ -115,11 +115,7 @@ async def generate_answer(request: QARequest, is_envelope=True) -> QAResponse:
         with open('text.txt', 'r', encoding='utf-8') as file:
             context_text = file.read()
     answer = await llm_request(request.query, context_text)
+    print(answer)
     relevant_pics = await asyncio.gather(*[is_pic_relevant(answer, pic) for pic in context_response.pics])
     filtered_pics = [pic for pic, is_relevant in zip(context_response.pics, relevant_pics) if is_relevant]
-    if filtered_pics:
-        paraphrased_answer = await llm_request_paraphrase_with_images(request.query, answer, filtered_pics)
-        answer += "\n\n С учетом картинок:" + paraphrased_answer
-    print(answer)
     return QAResponse(answer=answer, pics=filtered_pics)
-
